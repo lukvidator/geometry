@@ -5,26 +5,17 @@ from Vector import Vector
 
 
 class Segment:
-    def __init__(self, *args):
-        args = self._prepare_init_args(args)
-        types = [type(arg) for arg in args]
+    def __init__(self, points):
+        self.points = points
 
-        if types == [Point, Point]:
-            self._points = args
-        elif types == [Point, Vector]:
-            self._points = [args[0], args[0] + args[1]]
-        elif types == [np.ndarray, np.ndarray]:
-            self._points = [Point(arg) for arg in args]
+    @classmethod
+    def from_point_and_vector(cls, pair):
+        if len(pair) == 2:
+            return cls((lambda point, vector: [point, point + vector])(Point(pair[0]), Vector(pair[1])))
         else:
-            raise WrongTypeException(f"Can't init {type(self)} with {args}")
-
-    @staticmethod
-    def _prepare_init_args(args):
-        assert len(args) in (1, 2)
-        args = args if len(args) == 2 else args[0]
-        assert len(args) == 2
-
-        return args
+            raise WrongTypeException(
+                f"2 elements in arg for {cls}.from_point_and_vector expected, but {len(pair)} were given"
+            )
 
     @property
     def points(self):
@@ -32,8 +23,8 @@ class Segment:
 
     @points.setter
     def points(self, points):
-        if len(points) == 2 and [type(point) for point in points] == [Point, Point]:
-            self._points = points
+        if len(points) == 2:
+            self._points = [Point(point) for point in points]
         else:
             raise WrongTypeException(f"Can't set {type(self)} points with {points}")
 
