@@ -7,7 +7,7 @@ from Vector import Vector
 
 class Plane:
     def __init__(self, point, vectors):
-        if len(point) == len(vectors[0]) and np.array(vectors).shape == 2:
+        if len(point) == len(vectors[0]) and len(np.array(vectors).shape) == 2:
             self._point = np.array(point, dtype=np.float64)
             self._vectors = np.array(vectors, dtype=np.float64)
         else:
@@ -15,8 +15,7 @@ class Plane:
 
     @classmethod
     def from_coefficients(cls, coefficients):
-        points = find_three_plane_points(coefficients)
-        return cls(points[0], [point - points[0] for point in points[1:]])
+        return cls.from_points(find_three_plane_points(coefficients))
 
     @classmethod
     def from_equation(cls, equation, variables):
@@ -34,7 +33,7 @@ class Plane:
             raise WrongTypeException(f"Can't create {cls.__name__} with {(point, normal)}")
 
     def coefficients(self):
-        matrix = np.array([self._point, self._vectors])    # creating main matrix
+        matrix = np.array([self._point, *self._vectors])    # creating main matrix
         dim = len(self._point)    # getting the space dimension
 
         coefficients = np.array(
@@ -42,7 +41,7 @@ class Plane:
                 matrix[np.ix_(range(1, dim), [j for j in range(0, dim) if j != i])]
             ) for i in range(0, dim)])    # creating equation coefficients
 
-        np.append(coefficients, -np.linalg.det(matrix))    # adding free one
+        coefficients = np.append(coefficients, -np.linalg.det(matrix))    # adding free one
 
         return coefficients
 
