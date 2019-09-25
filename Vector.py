@@ -50,6 +50,7 @@ class Vector(Point):
     def is_collinear(self, other):
         return np.linalg.matrix_rank(np.array([self._coord, other._coord])) == 1
 
+    @staticmethod
     def cross(self, other):
         return Vector(np.cross(self, other))
 
@@ -59,6 +60,7 @@ class Vector(Point):
     def normalize(self):
         return self / self.norm()
 
+    @staticmethod
     def angle(self, other):
         return np.arccos(self.dot(other) / (self.norm() * other.norm()))
 
