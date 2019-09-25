@@ -106,11 +106,12 @@ class VectorTestCase(unittest.TestCase):
         self.assertEqual(Vector([1, 0, 0]), Vector([3, 0, 0]).normalize())
 
     def test_angle(self):
-        self.assertAlmostEqual(Vector([1, 0, 0]).angle(Vector([0, 1, 0])), np.pi/2)
+        self.assertAlmostEqual(Vector.angle(Vector([1, 0, 0]), Vector([0, 1, 0])), np.pi/2)
 
 
 class PlaneTestCase(unittest.TestCase):
     def test_init(self):
+        # TODO: rebuild test according to the changes in Plane class
         self.assertIsInstance(Plane(np.array([1, 1, 1, 1])), Plane)
         self.assertIsInstance(Plane(Point([0, 0, 0]), Vector([1, 0, 0])), Plane)
         self.assertIsInstance(Plane(np.array([0, 0, 0]), np.array([1, 0, 0])), Plane)
@@ -120,7 +121,7 @@ class PlaneTestCase(unittest.TestCase):
         self.assertRaises(WrongTypeException, Plane.__init__, Plane.__new__(Plane), 2)
 
     def test_coefficients(self):
-        self.assertTrue((Plane(np.array([1, 1, 1, 1])).coefficients == np.array([1, 1, 1, 1])).all())
+        self.assertTrue((Plane.from_coefficients(np.array([1, 1, 1, 1])).coefficients() == np.array([1, 1, 1, 1])).all())
 
 
 class ToolsTestCase(unittest.TestCase):
