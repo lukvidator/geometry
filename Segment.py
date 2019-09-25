@@ -28,5 +28,10 @@ class Segment:
         else:
             raise WrongTypeException(f"Can't set {type(self)} points with {points}")
 
+    def first(self):
+        return self._points[0]
+
+    def last(self):
+        return self._points[-1]
+
     # TODO: implement Segment class
-    pass
