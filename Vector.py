@@ -62,3 +62,9 @@ class Vector(Point):
     def angle(self, other):
         return np.arccos(self.dot(other) / (self.norm() * other.norm()))
 
+    @staticmethod
+    def projection(v, w):
+        e = w.normalize()
+        return e * v.dot(e)
+
+
