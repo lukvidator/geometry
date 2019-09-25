@@ -9,13 +9,8 @@ class Segment:
         self.points = points
 
     @classmethod
-    def from_point_and_vector(cls, pair):
-        if len(pair) == 2:
-            return cls((lambda point, vector: [point, point + vector])(Point(pair[0]), Vector(pair[1])))
-        else:
-            raise WrongTypeException(
-                f"2 elements in arg for {cls}.from_point_and_vector expected, but {len(pair)} were given"
-            )
+    def from_point_and_vector(cls, point, vector):
+        return cls((lambda p, v: [p, p + v])(Point(point), Vector(vector)))
 
     @property
     def points(self):
@@ -33,5 +28,3 @@ class Segment:
 
     def __setitem__(self, key, value):
         self._points[key] = Point(value)
-
-    # TODO: implement Segment class
