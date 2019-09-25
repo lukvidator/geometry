@@ -8,8 +8,8 @@ from Vector import Vector
 class Plane:
     def __init__(self, point, vectors):
         if len(point) == len(vectors[0]) and len(np.array(vectors).shape) == 2:
-            self._point = np.array(point, dtype=np.float64)
-            self._vectors = np.array(vectors, dtype=np.float64)
+            self._point = Point(point)
+            self._vectors = [Vector(vector) for vector in vectors]
         else:
             raise WrongDimensionException(f"Can't init {self.__class__} with args of different dimensions")
 
@@ -34,7 +34,7 @@ class Plane:
 
     def coefficients(self):
         matrix = np.array([self._point, *self._vectors])    # creating main matrix
-        dim = len(self._point)    # getting the space dimension
+        dim = self.dim()    # getting the space dimension
 
         coefficients = np.array(
             [(-1 if i % 2 else 1) * np.linalg.det(
@@ -75,7 +75,7 @@ class Plane:
     @vectors.setter
     def vectors(self, vectors):
         if np.array(vectors).shape == 2:
-            self._vectors = np.array(vectors, dtype=np.float64)
+            self._vectors = [Vector(vector) for vector in vectors]
         else:
             raise WrongDimensionException("Can't set vectors with different dimensions")
 
@@ -85,4 +85,4 @@ class Plane:
 
     @point.setter
     def point(self, point):
-        self._point = np.array(point, dtype=np.float64)
+        self._point = Point(point)
