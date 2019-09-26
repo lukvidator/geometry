@@ -7,10 +7,33 @@ from Vector import Vector
 
 class Segment:
     def __init__(self, points):
+        """
+        Create a segment.
+
+        Parameters
+        ----------
+        points : array_like
+
+        Returns
+        -------
+        out : Segment
+        """
         self.points = points
 
     @classmethod
     def from_point_and_vector(cls, point, vector):
+        """
+        Create a segment.
+
+        Parameters
+        ----------
+        point : Point
+        vector : Vector
+
+        Returns
+        -------
+        out : Segment
+        """
         return cls((lambda p, v: [p, p + v])(Point(point), Vector(vector)))
 
     @property

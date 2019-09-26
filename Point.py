@@ -4,6 +4,21 @@ from Exceptions import WrongDimensionException, WrongTypeException
 
 class Point:
     def __init__(self, coord, dtype=np.float64):
+        """
+        Create a Point.
+        Parameters
+        ----------
+        coord : array_like
+            An array, any object exposing the array interface, an object whose
+            __array__ method returns an array, or any (nested) sequence.
+        dtype : data-type, optional
+            The desired data-type for the Point.  If not given, then the type will
+            be float.
+
+        Returns
+        -------
+        out : Point
+        """
         self._coord = np.array(coord, dtype=dtype)
 
     @property
@@ -63,4 +78,10 @@ class Point:
         return str(type(self).__name__) + self._coord.__repr__()[5:]
 
     def plot(self, ax, **kwargs):
+        """
+
+        :param ax:
+        :param kwargs:
+        :return:
+        """
         return ax.scatter(*self._coord, **kwargs)
