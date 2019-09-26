@@ -127,3 +127,21 @@ class Plane:
         ranks.extend([np.linalg.matrix_rank(system) for system in (vectors, np.append(vectors, bridge))])
 
         return Plane._relation_cases(ranks)
+
+    def plot(self, ax, **kwargs):
+        coefficients = self.coefficients()
+        index = coefficients.nonzero()[0][0]
+
+        axis_lims = [ax.get_xlim, ax.get_ylim, ax.get_zlim]
+        axis_lims.pop(index)
+        axis_lims = [lim() for lim in axis_lims]
+
+        x = np.linspace(*axis_lims[0], 10)
+        y = np.linspace(*axis_lims[1], 10)
+        data = np.meshgrid(x, y)
+
+        func_coefficients = -np.delete(coefficients, index) / coefficients[index]
+        z = (lambda a, b: func_coefficients[0] * a + func_coefficients[1] * b + func_coefficients[2])(*data)
+
+        data.insert(index, z)
+        return ax.plot_surface(*data, **kwargs)
