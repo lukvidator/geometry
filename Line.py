@@ -58,4 +58,5 @@ class Line:
         else:
             raise WrongDimensionException(f"Can't evaluate Line's equation value in {self.dim()} dimension")
 
-
+    def param(self, t):
+        return self._point + t*self._vector
