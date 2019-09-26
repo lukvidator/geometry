@@ -2,7 +2,6 @@ import numpy as np
 from Exceptions import WrongTypeException, WrongDimensionException
 from Plane import Plane
 from Point import Point
-from Segment import Segment
 from Vector import Vector
 
 
