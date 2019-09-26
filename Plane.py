@@ -7,6 +7,18 @@ from Vector import Vector
 
 class Plane:
     def __init__(self, point, vectors):
+        """
+        Create a plane.
+
+        Parameters
+        ----------
+        point : array_like
+        vectors : array_like
+
+        Returns
+        -------
+        out : Plane
+        """
         if len(point) == len(vectors[0]):
             self.point = point
             self.vectors = vectors
@@ -15,24 +27,78 @@ class Plane:
 
     @classmethod
     def from_coefficients(cls, coefficients):
+        """
+        Create a plane.
+
+        Parameters
+        ----------
+        coefficients : np.ndarray
+
+        Returns
+        -------
+        out : Plane
+        """
         return cls.from_points(find_three_plane_points(coefficients))
 
     @classmethod
     def from_equation(cls, equation, variables):
+        """
+        Create a plane.
+
+        Parameters
+        ----------
+        equation : str
+        variables : array_like
+            Array of string variables.
+
+        Returns
+        -------
+        out : Plane
+        """
         return cls.from_coefficients(extract_coefs(equation, variables))
 
     @classmethod
     def from_points(cls, points):
+        """
+        Create a plane.
+
+        Parameters
+        ----------
+        points : array_like
+
+        Returns
+        -------
+        out : Plane
+        """
         return cls(points[0], [Vector(points[0], point) for point in points[1:]])
 
     @classmethod
     def from_point_and_normal(cls, point, normal):
+        """
+        Create a plane.
+
+        Parameters
+        ----------
+        point : Point
+        normal : Vector
+
+        Returns
+        -------
+        out : Plane
+        """
         if isinstance(point, Point) and isinstance(normal, Vector):
             return cls.from_coefficients(np.append(normal, -np.dot(point, normal)))
         else:
             raise WrongTypeException(f"Can't create {cls.__name__} with {(point, normal)}")
 
     def coefficients(self):
+        """
+        Find the coefficients of the plane's equation.
+
+        Returns
+        -------
+        out : np.ndarray
+        """
         matrix = np.array([self._point, *self._vectors])    # creating main matrix
         dim = self.dim()    # getting the space dimension
 
@@ -46,6 +112,18 @@ class Plane:
         return coefficients
 
     def equation(self, var=None):
+        """
+        Build the equation according to the plane's coefficients.
+
+        Parameters
+        ----------
+        var : array_like
+            Array of string variables.
+
+        Returns
+        -------
+        out : str
+        """
         coefficients = self.coefficients()
         if not var:
             var = ["x" + str(i + 1) for i in range(0, len(coefficients) - 1)]
@@ -61,9 +139,23 @@ class Plane:
         return equation
 
     def normal(self):
+        """
+        Find the normal vector for the plane.
+
+        Returns
+        -------
+        out : Vector
+        """
         return Vector(self.coefficients()[:-1])
 
     def dim(self):
+        """
+        Find dimension of Plane's data.
+
+        Returns
+        -------
+        out : int
+        """
         return len(self._point)
 
     @property
@@ -96,6 +188,18 @@ class Plane:
 
     @staticmethod
     def angle(plane1, plane2):
+        """
+        Find angle between planes.
+
+        Parameters
+        ----------
+        plane1 : Plane
+        plane2 : Plane
+
+        Returns
+        -------
+        out : float
+        """
         normal1 = plane1.normal()
         normal2 = plane2.normal()
         angle = Vector.angle(normal1, normal2)
@@ -119,6 +223,24 @@ class Plane:
 
     @staticmethod
     def relation(plane1, plane2):
+        """
+        Find relation of two planes
+
+        0 -- plane1 intersect plane2
+        1 -- plane1 in plane2
+        2 -- plane1 = plane2
+        3 -- plane1 || plane2
+        4 -- plane1 and plane2 are intercrossed
+
+        Parameters
+        ----------
+        plane1 : Plane
+        plane2 : Plane
+
+        Returns
+        -------
+        out : int
+        """
         bridge = Vector(plane1.point, plane2.point)    # creating "bridge" vector
         vectors = np.vstack([plane1.vectors, plane2.vectors])
 
@@ -129,6 +251,18 @@ class Plane:
         return Plane._relation_cases(ranks)
 
     def plot(self, ax, **kwargs):
+        """
+        Add plane's plot to the axes.
+
+        Parameters
+        ----------
+        ax : Axes3D (matplotlib)
+        kwargs : kwargs from Poly3DCollection (matplotlib)
+
+        Returns
+        -------
+        out : Poly3DCollection
+        """
         coefficients = self.coefficients()
         index = coefficients.nonzero()[0][0]
 
