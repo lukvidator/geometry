@@ -9,7 +9,7 @@ class Plane:
     def __init__(self, point, vectors):
         if len(point) == len(vectors[0]) and len(np.array(vectors).shape) == 2:
             self._point = Point(point)
-            self._vectors = [Vector(vector) for vector in vectors]
+            self._vectors = [Vector(vector).normalize() for vector in vectors]
         else:
             raise WrongDimensionException(f"Can't init {self.__class__} with args of different dimensions")
 
@@ -95,3 +95,11 @@ class Plane:
                    ", ".join([str(vector) for vector in self._vectors]) + ")"
 
     __repr__ = __str__
+
+    @staticmethod
+    def angle(plane1, plane2):
+        normal1 = plane1.normal()
+        normal2 = plane2.normal()
+        angle = Vector.angle(normal1, normal2)
+        return angle if angle <= np.pi/2 else Vector.angle(-normal1, normal2)
+
