@@ -55,7 +55,7 @@ class Plane:
         equation = \
             ' + '.join([str(pair[0]) + "*" + pair[1] for pair in zip(coefficients, var) if pair[0] != 0.])
         equation += " + " + str(coefficients[-1]) if coefficients[-1] != 0. else ""
-        equation.replace("+ -", "- ")
+        equation = equation.replace("+ -", "- ")
         equation += " == 0"
 
         return equation
