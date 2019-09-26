@@ -48,17 +48,15 @@ class Plane:
     def equation(self, var=None):
         coefficients = self.coefficients()
         if not var:
-            equation = \
-                ''.join([str(coef) + "*x" + str(i + 1) if coef != 0. else "" for i, coef in enumerate(coefficients[:-1])])
-            equation += str(coefficients[-1]) if coefficients[-1] != 0. else ""
-            equation.replace("+-", "-")
-        elif len(var) == len(coefficients) - 1:
-            equation = \
-                ''.join([str(pair[0]) + "*" + pair[1] if pair[0] != 0. else "" for pair in zip(coefficients, var)])
-            equation += str(coefficients[-1]) if coefficients[-1] != 0. else ""
-            equation.replace("+-", "-")
-        else:
+            var = ["x" + str(i + 1) for i in range(0, len(coefficients) - 1)]
+        elif not len(var) == len(coefficients) - 1:
             raise WrongTypeException(f"Can't create equation using {var}")
+
+        equation = \
+            ' + '.join([str(pair[0]) + "*" + pair[1] if pair[0] != 0. else "" for pair in zip(coefficients, var)])
+        equation += " + " + str(coefficients[-1]) if coefficients[-1] != 0. else ""
+        equation.replace("+ -", "- ")
+        equation += " == 0"
 
         return equation
 
