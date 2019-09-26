@@ -69,3 +69,11 @@ def find_three_plane_points(coefs):
         instances = np.hstack(instances)
 
     return instances
+
+
+def rotation_matrix(phi, w=None):
+    if not w:
+        return np.array([[np.cos(phi), -np.sin(phi)],
+                         [np.sin(phi), np.cos(phi)]])
+    else:
+        pass    # TODO: implement rotation_matrix for 3D
