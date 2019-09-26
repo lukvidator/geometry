@@ -47,8 +47,9 @@ class Vector(Point):
     def is_orthog(self, other):
         return self.dot(other) == 0.0
 
-    def is_collinear(self, other):
-        return np.linalg.matrix_rank(np.array([self._coord, other._coord])) == 1
+    @staticmethod
+    def are_collinear(*vectors):
+        return np.linalg.matrix_rank(np.array([*vectors])) == 1
 
     @staticmethod
     def cross(self, other):
