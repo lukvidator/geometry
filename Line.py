@@ -46,6 +46,9 @@ class Line:
         return len(self._point)
 
     def coefficients(self):
+        """
+        :return: np.ndarray of equation coefficients in case of 2-dim space, raise WrongDimensionException otherwise.
+        """
         if self.dim() == 2:
             normal = Vector([-self._vector[-1], self._vector[0]])
             return np.array([*normal, -normal.dot(self._point)])
@@ -59,6 +62,10 @@ class Line:
             raise WrongDimensionException(f"Can't evaluate Line's equation value in {self.dim()} dimension")
 
     def parameter(self, t):
+        """
+        :param t: float
+        :return: Point object corresponding to parameter t
+        """
         return self._point + t*self._vector
 
     def __str__(self):
@@ -67,6 +74,12 @@ class Line:
     __repr__ = __str__
 
     def plot(self, ax, **kwargs):
+        """
+        Add line to the axes using kwargs.
+        :param ax: Axes or Axes3D object from matplotlib package
+        :param kwargs: kwargs from LineCollection in matplotlib package
+        :return: Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
+        """
         index = self._vector.nonzero()[0][0]    # finding index of nonzero self.vector coordinate
         lim = np.array([ax.get_xlim, ax.get_ylim, ax.get_zlim][index]())    # choosing the corresponding lim
         t = (lim - self._point[index]) / self._vector[index]    # evaluating the parameter t for the param line equation
@@ -75,6 +88,10 @@ class Line:
         return ax.plot(*xyz)
 
     def distance_to_point(self, point):
+        """
+        :param point: Point object
+        :return: float absolute distance from line to the point
+        """
         return np.abs(np.linalg.det(np.array([point - self._point, self._vector])))
 
     @staticmethod
