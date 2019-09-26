@@ -34,7 +34,7 @@ class Line:
 
     @classmethod
     def from_points(cls, point1, point2):
-        return cls(point1, point2 - point1)
+        return cls(point1, Vector(point1, point2))
 
     @classmethod
     def from_segment(cls, segment):
