@@ -34,5 +34,16 @@ class Segment:
 
     __repr__ = __str__
 
+    def point_by_parameter(self, t):
+        return self._points[0] + t * Vector(*self._points)
+
+    def parameter_by_point(self, point):
+        vectors = [Vector(point, self._points[0]), Vector(*self._points)]
+        if Vector.are_collinear(*vectors):
+            return vectors[0].norm() / vectors[1].norm()
+        else:
+            raise ValueError("Can't get parameter of a point, which is not on the segment")
+
+
     def plot(self, ax, **kwargs):
         return ax.plot([self._points[0][0], self._points[1][0]], [self._points[0][1], self._points[1][1]], **kwargs)
