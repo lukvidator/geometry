@@ -86,3 +86,12 @@ class Plane:
     @point.setter
     def point(self, point):
         self._point = Point(point)
+
+    def __str__(self):
+        if self.dim() < 4:
+            return self.__class__.__name__ + "(" + self.equation() + ")"
+        else:
+            return self.__class__.__name__ + "(" + str(self.point) + ", " + \
+                   ", ".join([str(vector) for vector in self._vectors]) + ")"
+
+    __repr__ = __str__
