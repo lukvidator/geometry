@@ -108,7 +108,7 @@ class Line:
         else:
             raise WrongDimensionException(f"Can't get coefficients of the line in {self.dim()} dimension")
 
-    def __call__(self, point):
+    def __call__(self, point: Point):
         """
         Find the value of substituting the point into the line's equation.
 
@@ -121,7 +121,7 @@ class Line:
         out : float
         """
         if self.dim() == 2:
-            return np.dot(np.append(point, 1.), self.coefficients())
+            return np.dot(np.append(point.coord, 1.), self.coefficients())
         else:
             raise WrongDimensionException(f"Can't evaluate Line's equation value in {self.dim()} dimension")
 

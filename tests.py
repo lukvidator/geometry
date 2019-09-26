@@ -5,6 +5,7 @@ from Plane import Plane
 from Point import Point
 from tools import extract_coefs, find_three_plane_points
 from Vector import Vector
+from Polygon import Polygon
 
 
 class PointTestCase(unittest.TestCase):
@@ -130,6 +131,16 @@ class ToolsTestCase(unittest.TestCase):
         self.assertTrue((extract_coefs("1.9*z + 4*y == 0", "xyz") == np.array([0., 4., 1.9, 0.])).all())
         self.assertTrue((extract_coefs("-5.1*x1 + 4*x2 - 1.9*x3 - 1 == 0", ["x1", "x2", "x3"]) == np.array([-5.1, 4., -1.9, -1.0])).all())
         self.assertTrue((extract_coefs("1.9*x3 + 4*x2 == 0", ["x1", "x2", "x3"]) == np.array([0., 4., 1.9, 0.])).all())
+
+
+class PolygonTestCase(unittest.TestCase):
+    def test_orientation(self):
+        self.assertEqual(Polygon(
+            Point([0, 0]),
+            Point([1, 0]),
+            Point([1, 1]),
+            Point([0, 1])
+        ), 1)
 
 
 # TODO: more tests

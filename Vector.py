@@ -4,7 +4,7 @@ from Exceptions import WrongTypeException, WrongDimensionException
 
 
 class Vector(Point):
-    def __init__(self, point1: Point, point2=Point([0, 0, 0]), dtype=np.float64):
+    def __init__(self, point1: Point, point2=None, dtype=np.float64):
         """
         Create a vector.
 
@@ -18,6 +18,8 @@ class Vector(Point):
         -------
         out : Vector
         """
+        if not point2:
+            point2 = Point(np.zeros(len(point1)))
         self._coord = np.array(point1, dtype=dtype) - np.array(point2, dtype=dtype)
 
     def __neg__(self):
