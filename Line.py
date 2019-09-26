@@ -2,6 +2,7 @@ import numpy as np
 from Exceptions import WrongTypeException, WrongDimensionException
 from Point import Point
 from Segment import Segment
+from tools import express_variable
 from Vector import Vector
 
 
@@ -67,18 +68,11 @@ class Line:
     __repr__ = __str__
 
     def plot(self, ax, **kwargs):
-        if self.dim() == 2:
-            coefficients = self.coefficients()
-            if coefficients[0] == 0.:
-                y = -coefficients[-1] / coefficients[1]
-                ax.plot(ax.get_xlim(), [y, y], **kwargs)
-            elif coefficients[1] == 0.:
-                x = -coefficients[-1] / coefficients[0]
-                ax.plot([x, x], ax.get_ylim(), **kwargs)
-            else:
-                y = -(coefficients[0]*np.array(ax.get_xlim()) + coefficients[-1]) / coefficients[1]
-                ax.plot(ax.get_xlim(), y, **kwargs)
-        else:
-            pass    # TODO: implement Line.plot for 3D
+        index = self._vector.nonzero()[0][0]    # finding index of nonzero self.vector coordinate
+        lim = np.array([ax.get_xlim, ax.get_ylim, ax.get_zlim][index]())    # choosing the corresponding lim
+        t = (lim - self._point[index]) / self._vector[index]    # evaluating the parameter t for the param line equation
+        points = np.array([self.parameter(param) for param in t])    # finding points for plotting line
+        xyz = zip(*points)
+        return ax.plot(*xyz)
 
     # TODO: implement Line.from_planes
