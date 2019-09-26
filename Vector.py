@@ -5,6 +5,19 @@ from Exceptions import WrongTypeException, WrongDimensionException
 
 class Vector(Point):
     def __init__(self, point1: Point, point2=Point([0, 0, 0]), dtype=np.float64):
+        """
+        Create a vector.
+
+        Parameters
+        ----------
+        point1: array_like
+        point2: array_like
+        dtype: data-type, optional
+
+        Returns
+        -------
+        out : Vector
+        """
         self._coord = np.array(point1, dtype=dtype) - np.array(point2, dtype=dtype)
 
     def __neg__(self):
@@ -39,31 +52,114 @@ class Vector(Point):
     __itruediv__ = __truediv__
 
     def dot(self, other):
+        """
+        Find the dot product of two vectors.
+
+        Parameters
+        ----------
+        other : Vector
+
+        Returns
+        -------
+        out : int
+        """
         return np.dot(self, other)
 
     def is_orthog(self, other):
+        """
+        Find out if two vectors are orthogonal to each other.
+
+        Parameters
+        ----------
+        other : Vector
+
+        Returns
+        -------
+        out : bool
+        """
         return self.dot(other) == 0.0
 
     @staticmethod
     def are_collinear(*vectors):
+        """
+        Find out if vectors are collinear to each other.
+
+        Parameters
+        ----------
+        vectors : Vectors
+
+        Returns
+        -------
+        out : bool
+        """
         return np.linalg.matrix_rank(np.array([*vectors])) == 1
 
     @staticmethod
     def cross(self, other):
+        """
+        Find the cross product of two vectors.
+
+        Parameters
+        ----------
+        self : Vector
+        other : Vector
+
+        Returns
+        -------
+        out : Vector
+        """
         return Vector(np.cross(self, other))
 
     def norm(self):
+        """
+        Find the norm of vector.
+
+        Returns
+        -------
+        out : float
+        """
         return np.sqrt(np.sum(self._coord ** 2))
 
     def normalize(self):
+        """
+        Create normalized vector.
+
+        Returns
+        -------
+        out : Vector
+        """
         return self / self.norm()
 
     @staticmethod
     def angle(self, other):
+        """
+        Find the angle between two vectors.
+
+        Parameters
+        ----------
+        self : Vector
+        other : Vector
+
+        Returns
+        -------
+        out : float
+        """
         return np.arccos(self.dot(other) / (self.norm() * other.norm()))
 
     @staticmethod
     def projection(v, w):
+        """
+        Find the projection of vector v onto vector w.
+
+        Parameters
+        ----------
+        v : Vector
+        w : Vector
+
+        Returns
+        -------
+        out : Vector
+        """
         e = w.normalize()
         return e * v.dot(e)
 
