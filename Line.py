@@ -61,4 +61,9 @@ class Line:
     def parameter(self, t):
         return self._point + t*self._vector
 
+    def __str__(self):
+        return self.__class__.__name__ + "(" + str(self._point) + ", " + str(self._vector) + ")"
+
+    __repr__ = __str__
+
     # TODO: implement Line.from_planes
