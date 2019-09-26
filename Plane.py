@@ -128,7 +128,7 @@ class Plane:
 
         return Plane._relation_cases(ranks)
 
-    def plot(self, ax, npoints=10, **kwargs):
+    def plot(self, ax, **kwargs):
         coefficients = self.coefficients()
         index = coefficients.nonzero()[0][0]
 
@@ -136,8 +136,8 @@ class Plane:
         axis_lims.pop(index)
         axis_lims = [lim() for lim in axis_lims]
 
-        x = np.linspace(*axis_lims[0], npoints)
-        y = np.linspace(*axis_lims[1], npoints)
+        x = np.linspace(*axis_lims[0], 10)
+        y = np.linspace(*axis_lims[1], 10)
         data = np.meshgrid(x, y)
 
         func_coefficients = -np.delete(coefficients, index) / coefficients[index]
