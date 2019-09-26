@@ -1,5 +1,6 @@
 import numpy as np
 from Exceptions import WrongTypeException, WrongDimensionException
+from Plane import Plane
 from Point import Point
 from Segment import Segment
 from Vector import Vector
@@ -73,5 +74,21 @@ class Line:
         points = np.array([self.parameter(param) for param in t])    # finding points for plotting line
         xyz = zip(*points)
         return ax.plot(*xyz)
+
+    def distance_to_point(self, point):
+        return np.abs(np.linalg.det(np.array([point - self._point, self._vector])))
+
+    @staticmethod
+    def relation(line1, line2) -> (0, 1, 2, 3):
+        """Return:
+        - 0 if lines are intersected,
+        - 1 if lines are equal
+        - 2 if lines are parallel
+        - 3 if lines are intercrossed
+        """
+        plane1 = Plane(line1.point, [line1.vector])
+        plane2 = Plane(line2.point, [line2.vector])
+        case = Plane.relation(plane1, plane2)
+        return case if not case else case - 1
 
     # TODO: implement Line.from_planes
