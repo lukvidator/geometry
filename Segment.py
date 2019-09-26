@@ -59,9 +59,31 @@ class Segment:
     __repr__ = __str__
 
     def point_by_parameter(self, t):
+        """
+        Find a point according to the segment corresponding to parameter t.
+
+        Parameters
+        ----------
+        t : float
+
+        Returns
+        -------
+        out : Point
+        """
         return self._points[0] + t * Vector(*self._points)
 
     def parameter_by_point(self, point):
+        """
+        Find a parameter according to the segment corresponding to the point.
+
+        Parameters
+        ----------
+        point : Point
+
+        Returns
+        -------
+        out : float
+        """
         vectors = [Vector(point, self._points[0]), Vector(*self._points)]
         if Vector.are_collinear(*vectors):
             return vectors[0].norm() / vectors[1].norm()
@@ -71,12 +93,20 @@ class Segment:
     @staticmethod
     def relation(segment1, segment2) -> (-1, 0, 1):
         """
-        :param segment1: Segment object
-        :param segment2: Segment object
-        :return:
+        Find relation between segments.
+
         1 -- if segments are intersected,
         0 -- if segments aren't parallel and not intersected,
         -1 -- otherwise
+
+        Parameters
+        ----------
+        segment1: Segment
+        segment2: Segment
+
+        Returns
+        -------
+        out : int
         """
         line1 = Line.from_segment(segment1)
         case = Line.relation(line1, Line.from_segment(segment2))
@@ -86,4 +116,16 @@ class Segment:
             return -1
 
     def plot(self, ax, **kwargs):
+        """
+        Add segment to the axes using kwargs.
+
+        Parameters
+        ----------
+        ax : Axes or Axes3D (matplotlib)
+        kwargs : kwargs from LineCollection (matplotlib)
+
+        Returns
+        -------
+        out : Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
+        """
         return ax.plot([self._points[0][0], self._points[1][0]], [self._points[0][1], self._points[1][1]], **kwargs)

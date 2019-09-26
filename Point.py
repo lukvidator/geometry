@@ -79,9 +79,15 @@ class Point:
 
     def plot(self, ax, **kwargs):
         """
+        Add point to the axes using kwargs.
 
-        :param ax:
-        :param kwargs:
-        :return:
+        Parameters
+        ----------
+        ax : Axes or Axes3D (matplotlib)
+        kwargs : kwargs from LineCollection (matplotlib)
+
+        Returns
+        -------
+        out : Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
         """
         return ax.scatter(*self._coord, **kwargs)

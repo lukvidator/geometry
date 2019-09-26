@@ -109,6 +109,17 @@ class Line:
             raise WrongDimensionException(f"Can't get coefficients of the line in {self.dim()} dimension")
 
     def __call__(self, point):
+        """
+        Find the value of substituting the point into the line's equation.
+
+        Parameters
+        ----------
+        point: Point
+
+        Returns
+        -------
+        out : float
+        """
         if self.dim() == 2:
             return np.dot(np.append(point, 1.), self.coefficients())
         else:
@@ -116,7 +127,7 @@ class Line:
 
     def parameter(self, t):
         """
-        Find a point according to the segment corresponding to parameter t.
+        Find a point according to the line data corresponding to parameter t.
 
         Parameters
         ----------
@@ -155,18 +166,36 @@ class Line:
 
     def distance_to_point(self, point):
         """
-        :param point: Point object
-        :return: float absolute distance from line to the point
+        Find absolute distance from line to point
+
+        Parameters
+        ----------
+        point : Point
+
+        Returns
+        -------
+        out : float
         """
         return np.abs(np.linalg.det(np.array([point - self._point, self._vector])))
 
     @staticmethod
     def relation(line1, line2) -> (0, 1, 2, 3):
-        """Return:
+        """
+        Find relation between lines.
+
         - 0 if lines are intersected,
         - 1 if lines are equal
         - 2 if lines are parallel
         - 3 if lines are intercrossed
+
+        Parameters
+        ----------
+        line1 : Line
+        line2 : Line
+
+        Returns
+        -------
+        out : int
         """
         plane1 = Plane(line1.point, [line1.vector])
         plane2 = Plane(line2.point, [line2.vector])
