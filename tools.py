@@ -46,6 +46,7 @@ def extract_coefs(equation, variables):
 
 
 def find_three_plane_points(coefs):
+    # TODO: extend function to n-dim
     index = coefs.nonzero()[0][0]     # finding the axis with the first nonzero coefficient
     others = np.concatenate([coefs[:index], coefs[index + 1:]])    # and drop it
     others = -others / coefs[index]    # transferring other coefficients to another side and divide them by nonzero coef
