@@ -62,3 +62,5 @@ class Point:
     def __repr__(self):
         return str(type(self).__name__) + self._coord.__repr__()[5:]
 
+    def plot(self, ax, **kwargs):
+        return ax.scatter(*self._coord, **kwargs)

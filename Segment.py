@@ -33,3 +33,6 @@ class Segment:
         return self.__class__.__name__ + "(" + str(self._points) + ")"
 
     __repr__ = __str__
+
+    def plot(self, ax, **kwargs):
+        return ax.plot([self._points[0][0], self._points[1][0]], [self._points[0][1], self._points[1][1]], **kwargs)

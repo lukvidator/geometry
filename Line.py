@@ -66,4 +66,19 @@ class Line:
 
     __repr__ = __str__
 
+    def plot(self, ax, **kwargs):
+        if self.dim() == 2:
+            coefficients = self.coefficients()
+            if coefficients[0] == 0.:
+                y = -coefficients[-1] / coefficients[1]
+                ax.plot(ax.get_xlim(), [y, y], **kwargs)
+            elif coefficients[1] == 0.:
+                x = -coefficients[-1] / coefficients[0]
+                ax.plot([x, x], ax.get_ylim(), **kwargs)
+            else:
+                y = -(coefficients[0]*np.array(ax.get_xlim()) + coefficients[-1]) / coefficients[1]
+                ax.plot(ax.get_xlim(), y, **kwargs)
+        else:
+            pass    # TODO: implement Line.plot for 3D
+
     # TODO: implement Line.from_planes
