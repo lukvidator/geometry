@@ -28,3 +28,8 @@ class Segment:
 
     def __setitem__(self, key, value):
         self._points[key] = Point(value)
+
+    def __str__(self):
+        return self.__class__.__name__ + "(" + str(self._points) + ")"
+
+    __repr__ = __str__
