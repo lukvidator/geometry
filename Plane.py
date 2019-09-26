@@ -53,7 +53,7 @@ class Plane:
             raise WrongTypeException(f"Can't create equation using {var}")
 
         equation = \
-            ' + '.join([str(pair[0]) + "*" + pair[1] if pair[0] != 0. else "" for pair in zip(coefficients, var)])
+            ' + '.join([str(pair[0]) + "*" + pair[1] for pair in zip(coefficients, var) if pair[0] != 0.])
         equation += " + " + str(coefficients[-1]) if coefficients[-1] != 0. else ""
         equation.replace("+ -", "- ")
         equation += " == 0"
