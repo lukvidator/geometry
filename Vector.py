@@ -4,13 +4,8 @@ from Exceptions import WrongTypeException, WrongDimensionException
 
 
 class Vector(Point):
-    def __init__(self, *args, dtype=np.float64):
-        if len(args) == 1:
-            self._coord = np.array(args[0], dtype=dtype)
-        elif len(args) == 2:
-            self._coord = np.array(args[1], dtype=dtype) - np.array(args[0], dtype=dtype)
-        else:
-            raise WrongTypeException(f"Can't init Vector with {args}")
+    def __init__(self, point1: Point, point2=Point([0, 0, 0]), dtype=np.float64):
+        self._coord = np.array(point1, dtype=dtype) - np.array(point2, dtype=dtype)
 
     def __neg__(self):
         return Vector(-self._coord)
@@ -22,7 +17,9 @@ class Vector(Point):
         try:
             return self.__add__(-other)
         except (WrongTypeException, AttributeError):
-            raise WrongTypeException(f"Can't subtract an object of type {type(other).__name__} from {type(self).__name__}")
+            raise WrongTypeException(
+                f"Can't subtract an object of type {type(other).__name__} from {type(self).__name__}"
+            )
         except WrongDimensionException:
             raise WrongDimensionException(
                 f"subtract {type(other).__name__} of len {len(other)} from {type(self).__name__} of len {len(self)}"

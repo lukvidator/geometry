@@ -2,7 +2,6 @@ import numpy as np
 from Exceptions import WrongTypeException, WrongDimensionException
 from Point import Point
 from Segment import Segment
-from tools import express_variable
 from Vector import Vector
 
 

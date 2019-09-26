@@ -72,7 +72,7 @@ class Plane:
 
     @vectors.setter
     def vectors(self, vectors):
-        if np.array(vectors).shape == 2:
+        if len(np.array(vectors).shape) == 2:
             self._vectors = [Vector(vector).normalize() for vector in vectors]
         else:
             raise WrongDimensionException("Can't set vectors with different dimensions")
@@ -119,7 +119,7 @@ class Plane:
 
     @staticmethod
     def relation(plane1, plane2):
-        bridge = Vector(plane1.point, plane2.point)
+        bridge = Vector(plane1.point, plane2.point)    # creating "bridge" vector
         vectors = np.vstack([plane1.vectors, plane2.vectors])
 
         ranks = [np.linalg.matrix_rank(plane.vectors) for plane in (plane1, plane2)]
