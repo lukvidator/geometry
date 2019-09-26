@@ -1,5 +1,6 @@
 import numpy as np
 from Exceptions import WrongTypeException, WrongDimensionException
+from Line import Line
 from Point import Point
 from Vector import Vector
 
@@ -44,6 +45,25 @@ class Segment:
         else:
             raise ValueError("Can't get parameter of a point, which is not on the segment")
 
+    @staticmethod
+    def are_intersected(segment1, segment2):
+        """
+        :param segment1: Segment object
+        :param segment2: Segment object
+        :return: 0 -- if segments are intersected, 1 -- otherwise
+        """
+        line1 = Line.from_segment(segment1)
+        case = Line.relation(line1, Line.from_segment(segment2))
+        if case == 0:
+            return True if line1(segment2[0]) * line1(segment2[1]) <= 0 else False
+        elif case == 1:
+            parameters = np.array([segment1.paramater_by_point(point) for point in segment2.points])
+            if (parameters > 1).all() or (parameters < 0).all():
+                return False
+            else:
+                return True
+        else:
+            return False
 
     def plot(self, ax, **kwargs):
         return ax.plot([self._points[0][0], self._points[1][0]], [self._points[0][1], self._points[1][1]], **kwargs)
