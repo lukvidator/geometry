@@ -7,9 +7,9 @@ from Vector import Vector
 
 class Plane:
     def __init__(self, point, vectors):
-        if len(point) == len(vectors[0]) and len(np.array(vectors).shape) == 2:
-            self._point = Point(point)
-            self._vectors = [Vector(vector).normalize() for vector in vectors]
+        if len(point) == len(vectors[0]):
+            self.point = point
+            self.vectors = vectors
         else:
             raise WrongDimensionException(f"Can't init {self.__class__} with args of different dimensions")
 
@@ -73,7 +73,7 @@ class Plane:
     @vectors.setter
     def vectors(self, vectors):
         if np.array(vectors).shape == 2:
-            self._vectors = [Vector(vector) for vector in vectors]
+            self._vectors = [Vector(vector).normalize() for vector in vectors]
         else:
             raise WrongDimensionException("Can't set vectors with different dimensions")
 
