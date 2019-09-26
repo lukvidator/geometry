@@ -11,7 +11,7 @@ class Plane:
             self.point = point
             self.vectors = vectors
         else:
-            raise WrongDimensionException(f"Can't init {self.__class__} with args of different dimensions")
+            raise WrongDimensionException(f"Can't init {self.__class__.__name__} with args of different dimensions")
 
     @classmethod
     def from_coefficients(cls, coefficients):
@@ -101,3 +101,29 @@ class Plane:
         angle = Vector.angle(normal1, normal2)
         return angle if angle <= np.pi/2 else Vector.angle(-normal1, normal2)
 
+    @staticmethod
+    def _relation_cases(ranks) -> (0, 1, 2, 3, 4):
+        if ranks[2] == ranks[3]:
+            if ranks[1] == ranks[2]:
+                if ranks[0] != ranks[1]:
+                    return 1  # pl1 in pl2
+                else:
+                    return 2  # pl1 = pl2
+            else:
+                return 0  # pl1 intersect pl2
+        else:
+            if ranks[2] == ranks[1] and ranks[1] >= ranks[0]:
+                return 3  # pl1 || pl2
+            elif ranks[2] > ranks[1]:
+                return 4  # pl1 and pl2 are intercrossed
+
+    @staticmethod
+    def relation(plane1, plane2):
+        bridge = Vector(plane1.point, plane2.point)
+        vectors = np.vstack([plane1.vectors, plane2.vectors])
+
+        ranks = [np.linalg.matrix_rank(plane.vectors) for plane in (plane1, plane2)]
+        ranks.sort(key=len)
+        ranks.extend([np.linalg.matrix_rank(system) for system in (vectors, np.append(vectors, bridge))])
+
+        return Plane._relation_cases(ranks)
