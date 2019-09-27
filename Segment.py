@@ -115,6 +115,28 @@ class Segment:
         else:
             return -1
 
+    @staticmethod
+    def _are_interseted(segment1, segment2):
+        d1 = np.linalg.det([segment1[1] - segment1[0], segment2[0] - segment1[0]])
+        d2 = np.linalg.det([segment1[1] - segment1[0], segment2[1] - segment1[0]])
+        d3 = np.linalg.det([segment2[1] - segment2[0], segment1[0] - segment2[0]])
+        d4 = np.linalg.det([segment2[1] - segment2[0], segment1[1] - segment2[0]])
+        return d1 * d2 <= 0 and d3 * d4 <= 0
+
+    def _is_point_on_segment(self, point):
+        if np.linalg.det([point - self[0], self[0] - self[1]]) < 10 ** -6:
+            if self[0][0] <= self[1][0]:
+                flag = (self[0][0] <= point[0] <= self[1][0])
+            else:
+                flag = (self[0][0] >= point[0] >= self[1][0])
+
+            if self[0][1] <= self[1][1]:
+                return flag and self[0][1] <= point[1] <= self[1][1]
+            else:
+                return flag and self[0][1] >= point[1] >= self[1][1]
+        else:
+            return False
+
     def plot(self, ax, **kwargs):
         """
         Add segment to the axes using kwargs.
