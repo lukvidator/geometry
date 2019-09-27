@@ -9,6 +9,14 @@ class Polygon:
     def __init__(self, points: List[Point]):
         self.points = points
 
+    @property
+    def points(self):
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = [Point(point) for point in points]
+
     @staticmethod
     def _nf2(a: Point, b: Point, p: Point):
         return det([
