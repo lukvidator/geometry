@@ -77,3 +77,8 @@ def rotation_matrix(phi, w=None):
                          [np.sin(phi), np.cos(phi)]])
     else:
         pass    # TODO: implement rotation_matrix for 3D
+
+
+def rectangle_test(points, point):
+    minmax = [np.amin(points), np.amax(points)]
+    return True if (point >= minmax[0]).all() and (point <= minmax[1]).all() else False
