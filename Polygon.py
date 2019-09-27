@@ -1,7 +1,7 @@
 from typing import List
 from Point import Point
 from Segment import Segment
-from numpy import sign, array
+from numpy import sign, array, amin, amax
 from numpy.linalg import det
 
 
@@ -77,6 +77,9 @@ class Polygon:
                 return 1
         return 0
 
+    def rectangle_test(self, point):
+        minmax = [amin(self._points), amax(self._points)]
+        return True if (point >= minmax[0]).all() and (point <= minmax[1]).all() else False
 
 # p = Polygon([
 #     Point([0, 0]),
