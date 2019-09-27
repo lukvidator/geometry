@@ -2,6 +2,7 @@ import numpy as np
 from Exceptions import WrongTypeException, WrongDimensionException
 from Line import Line
 from Point import Point
+from tools import rectangle_test
 from Vector import Vector
 
 
@@ -86,7 +87,7 @@ class Segment:
         """
         vectors = [Vector(point, self._points[0]), Vector(*self._points)]
         if Vector.are_collinear(*vectors):
-            return vectors[0].norm() / vectors[1].norm()
+            return Vector.direction_case(*vectors) * vectors[0].norm() / vectors[1].norm()
         else:
             raise ValueError("Can't get parameter of a point, which is not on the segment")
 
@@ -116,24 +117,16 @@ class Segment:
             return -1
 
     @staticmethod
-    def _are_interseted(segment1, segment2):
+    def _are_intersected(segment1, segment2):
         d1 = np.linalg.det([segment1[1] - segment1[0], segment2[0] - segment1[0]])
         d2 = np.linalg.det([segment1[1] - segment1[0], segment2[1] - segment1[0]])
         d3 = np.linalg.det([segment2[1] - segment2[0], segment1[0] - segment2[0]])
         d4 = np.linalg.det([segment2[1] - segment2[0], segment1[1] - segment2[0]])
         return d1 * d2 <= 0 and d3 * d4 <= 0
 
-    def _is_point_on_segment(self, point):
-        if np.linalg.det([point - self[0], self[0] - self[1]]) < 10 ** -6:
-            if self[0][0] <= self[1][0]:
-                flag = (self[0][0] <= point[0] <= self[1][0])
-            else:
-                flag = (self[0][0] >= point[0] >= self[1][0])
-
-            if self[0][1] <= self[1][1]:
-                return flag and self[0][1] <= point[1] <= self[1][1]
-            else:
-                return flag and self[0][1] >= point[1] >= self[1][1]
+    def _is_point_on_segment(self, point: Point) -> bool:
+        if Vector.are_collinear(Vector(self[0], point), Vector(self[0], self[1])):
+            return rectangle_test(self._points, point)
         else:
             return False
 
