@@ -6,8 +6,7 @@ from numpy.linalg import det
 
 
 class Polygon:
-    def __init__(self, points: List[Point], name=''):
-        self.name = name
+    def __init__(self, points: List[Point]):
         self.points = points
 
     @staticmethod
