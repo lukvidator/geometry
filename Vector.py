@@ -168,4 +168,26 @@ class Vector(Point):
         e = w.normalize()
         return e * v.dot(e)
 
+    @staticmethod
+    def direction_case(vector1, vector2) -> int:
+        """
+        Give the direction case of vectors.
+
+        -1 -- opposite directions
+        1 -- co-focus vectors
+        0 -- otherwise
+
+        Parameters
+        ----------
+        vector1 : Vector
+        vector2 : Vector
+
+        Returns
+        -------
+        out : int
+        """
+        if Vector.are_collinear(vector1, vector2):
+            return 1 if vector1.normalize() == vector1.normalize() else -1
+        else:
+            return 0
 
