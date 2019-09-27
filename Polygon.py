@@ -1,8 +1,6 @@
 from typing import List
 from Point import Point
-from Line import Line
 from Segment import Segment
-from Vector import Vector
 from numpy import sign, array
 from numpy.linalg import det
 
@@ -12,17 +10,21 @@ class Polygon:
         self.name = name
         self.points = points
 
+    @staticmethod
+    def _nf2(a: Point, b: Point, p: Point):
+        return det([
+            array(p) - array(a),
+            array(b) - array(a)
+        ])
+
     @property
     def square(self):
         """
-        :return: square of Polygon
+        :return: sign square of Polygon
         """
         result = 0
-        for i in range(2, len(self.points)-1):
-            result += det([
-                array(self.points[0]) - array(self.points[i+1]),
-                array(self.points[i+1]) - array(self.points[i]),
-            ])
+        for i in range(1, len(self.points)-1):
+            result += 0.5*self._nf2(self.points[0], self.points[i+1], self.points[i])
 
         return result
 
@@ -49,19 +51,46 @@ class Polygon:
         result.append(Segment([self.points[n - 1], self.points[0]]))
         return result
 
+    @property
+    def is_convex(self):
+        """
+        :return:
+        0 - if it's not convex
+        1 - if it's convex
+        """
+        n = len(self.points) - 1
+        begin_orient = self._nf2(self.points[n], self.points[0], self.points[1])
+        for i in range(1, n):
+            current_orient = self._nf2(self.points[i-1], self.points[i], self.points[i+1])
+            if sign(begin_orient) != sign(current_orient):
+                break
+        else:
+            last_orient = self._nf2(self.points[n-1], self.points[n], self.points[0])
+            if sign(begin_orient) == sign(last_orient):
+                return 1
+        return 0
+
 
 # p = Polygon([
 #     Point([0, 0]),
-#     Point([1, 0]),
-#     Point([1, 1]),
-#     Point([0, 1]),
+#     Point([2, 0]),
+#     Point([2, 2]),
+#     Point([0, 2]),
 # ])
-#
-# v = Vector([1, 1])
-#
-# l = Line(Point([0, 0]), Point([1, 0]))
 #
 # print(p.square)
 # print(p.orientation)
 # print(p.vertex_number)
 # print(p.edges)
+# print(p.is_convex)
+#
+# p2 = Polygon([
+#     Point([0, 0]),
+#     Point([2, 1]),
+#     Point([0, 2]),
+#     Point([1, 1])
+# ])
+#
+# print(p2.square)
+# print(p2.orientation)
+# print(p2.is_convex)
