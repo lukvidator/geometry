@@ -2,7 +2,7 @@ from typing import List
 from Point import Point
 from Segment import Segment
 from Vector import Vector
-from tools import rectangle_test, _nf2
+from tools import rectangle_test, _nf2, triangle_signed_square
 from matplotlib.collections import PolyCollection
 from numpy import sign
 import numpy as np
@@ -24,11 +24,11 @@ class Polygon:
     @property
     def square(self):
         """
-        :return: sign square of Polygon
+        :return: signed square of convex Polygon
         """
         result = 0
-        for i in range(1, len(self.points) - 1):
-            result += 0.5 * _nf2(self.points[0], self.points[i + 1], self.points[i])
+        for i in range(1, len(self._points) - 1):
+            result += triangle_signed_square(self._points[0], self._points[i], self._points[i + 1])
 
         return result
 
@@ -36,10 +36,10 @@ class Polygon:
     def orientation(self):
         """
         :return:
-        0 - if orientation is left
+        -1 - if orientation is left
         1 - if orientation is right
         """
-        return 1 if self.square > 0 else 0
+        return sign(self.square)
 
     @property
     def vertex_number(self):
@@ -112,6 +112,26 @@ class Polygon:
                     return 0    # return case: point lies on the edge
 
         return f
+
+    def segment_clipping(self, segment, case="out"):
+        case = (0, 1) if case == "out" else (-1, )    # define the allowed values for ray_test
+        parameters = set((0, 1))    # parameters of the end points of the segment
+
+        for edge in self.edges:
+            intersection = Segment.intersection(segment, edge)
+            if intersection[0] == 1:               # if segment and edge have intersection
+                parameters.add(intersection[2])    # add t1 parameter of segment parametrization of intersection point
+
+        parameters = list(parameters)
+        parameters.sort()
+
+        return [
+            # build the segment between the intersection points using the parametrization of the segment
+            Segment((segment.point_by_parameter(parameters[i]), segment.point_by_parameter(parameters[i + 1])))
+            for i in range(0, len(parameters) - 1)
+            # if the midpoint of the segment lies inside/outside (according to the clipping case) the polygon
+            if self.ray_test(segment.point_by_parameter((parameters[i] + parameters[i + 1]) / 2)) in case
+        ]
 
     def plot(self, ax, **kwargs):
         """
