@@ -79,6 +79,10 @@ def rotation_matrix(phi, w=None):
         pass    # TODO: implement rotation_matrix for 3D
 
 
+def _nf2(a, b, p):
+    return np.linalg.det([np.array(p) - np.array(a), np.array(b) - np.array(a)])
+
+
 def rectangle_test(points, point):
     minmax = [np.amin(points), np.amax(points)]
     return True if (point >= minmax[0]).all() and (point <= minmax[1]).all() else False

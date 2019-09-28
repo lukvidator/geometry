@@ -2,10 +2,9 @@ from typing import List
 from Point import Point
 from Segment import Segment
 from Vector import Vector
-from tools import rectangle_test
+from tools import rectangle_test, _nf2
 from matplotlib.collections import PolyCollection
-from numpy import sign, array
-from numpy.linalg import det
+from numpy import sign
 import numpy as np
 import random as rnd
 
@@ -22,10 +21,6 @@ class Polygon:
     def points(self, points):
         self._points = [Point(point) for point in points]
 
-    @staticmethod
-    def _nf2(a: Point, b: Point, p: Point):
-        return det([array(p) - array(a), array(b) - array(a)])
-
     @property
     def square(self):
         """
@@ -33,7 +28,7 @@ class Polygon:
         """
         result = 0
         for i in range(1, len(self.points) - 1):
-            result += 0.5 * self._nf2(self.points[0], self.points[i + 1], self.points[i])
+            result += 0.5 * _nf2(self.points[0], self.points[i + 1], self.points[i])
 
         return result
 
@@ -68,13 +63,13 @@ class Polygon:
         1 - if it's convex
         """
         n = len(self.points) - 1
-        begin_orient = self._nf2(self.points[n], self.points[0], self.points[1])
+        begin_orient = _nf2(self.points[n], self.points[0], self.points[1])
         for i in range(1, n):
-            current_orient = self._nf2(self.points[i - 1], self.points[i], self.points[i + 1])
+            current_orient = _nf2(self.points[i - 1], self.points[i], self.points[i + 1])
             if sign(begin_orient) != sign(current_orient):
                 break
         else:
-            last_orient = self._nf2(self.points[n - 1], self.points[n], self.points[0])
+            last_orient = _nf2(self.points[n - 1], self.points[n], self.points[0])
             if sign(begin_orient) == sign(last_orient):
                 return 1
         return 0
