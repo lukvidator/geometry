@@ -3,6 +3,7 @@ from Exceptions import WrongTypeException, WrongDimensionException
 from Plane import Plane
 from Point import Point
 from Vector import Vector
+from Segment import Segment
 
 
 class Line:
@@ -162,7 +163,7 @@ class Line:
         t = (lim - self._point[index]) / self._vector[index]    # evaluating the parameter t for the param line equation
         points = np.array([self.parameter(param) for param in t])    # finding points for plotting line
         xyz = zip(*points)
-        return ax.plot(*xyz)
+        return ax.plot(*xyz, **kwargs)
 
     def distance_to_point(self, point):
         """
