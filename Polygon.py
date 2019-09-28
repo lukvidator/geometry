@@ -4,7 +4,6 @@ from Segment import Segment
 from Vector import Vector
 from tools import rectangle_test, _nf2, triangle_signed_square
 from matplotlib.collections import PolyCollection
-from numpy import sign
 import numpy as np
 import random as rnd
 
@@ -39,7 +38,7 @@ class Polygon:
         -1 - if orientation is left
         1 - if orientation is right
         """
-        return sign(self.square)
+        return np.sign(self.square)
 
     @property
     def vertex_number(self):
@@ -66,11 +65,11 @@ class Polygon:
         begin_orient = _nf2(self.points[n], self.points[0], self.points[1])
         for i in range(1, n):
             current_orient = _nf2(self.points[i - 1], self.points[i], self.points[i + 1])
-            if sign(begin_orient) != sign(current_orient):
+            if np.sign(begin_orient) != np.sign(current_orient):
                 break
         else:
             last_orient = _nf2(self.points[n - 1], self.points[n], self.points[0])
-            if sign(begin_orient) == sign(last_orient):
+            if np.sign(begin_orient) == np.sign(last_orient):
                 return 1
         return 0
 
@@ -114,8 +113,8 @@ class Polygon:
         return f
 
     def segment_clipping(self, segment, case="out"):
-        case = (0, 1) if case == "out" else (-1, )    # define the allowed values for ray_test
-        parameters = set((0, 1))    # parameters of the end points of the segment
+        case = (-1, 0) if case == "out" else (1, )    # define the allowed values for ray_test
+        parameters = {0, 1}  # set of the end points parameters of the segment
 
         for edge in self.edges:
             intersection = Segment.intersection(segment, edge)
