@@ -19,8 +19,9 @@ class Vector(Point):
         out : Vector
         """
         if point2 is None:
-            point2 = np.zeros(len(point1))
-        self._coord = np.array(point1, dtype=dtype) - np.array(point2, dtype=dtype)
+            self._coord = np.array(point1, dtype=dtype)
+        else:
+            self._coord = np.array(point2, dtype=dtype) - np.array(point1, dtype=dtype)
 
     def __neg__(self):
         return Vector(-self._coord)
