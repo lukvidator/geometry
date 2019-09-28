@@ -130,6 +130,37 @@ class Segment:
         else:
             return False
 
+    @staticmethod
+    def _intersection(segment1, segment2):
+        """
+        Find the intersection of two segments.
+
+        (-1, None, None, None) -- if segments are parallel.
+        (0, q, t1, t2) -- if segments are non-parallel, but don't have intersection.
+                            There q is the intersection point of the segments lines and
+                            t1, t2 are the parameters for this point in their parametrization.
+        (1, q, t1, t2) -- if segments have intersection.
+
+        Parameters
+        ----------
+        segment1 : Segment
+        segment2 : Segment
+
+        Returns
+        -------
+        out : tuple(int, Point, float, float)
+        """
+        v = Vector(*segment1)
+        m = np.array([v, Vector(segment2[1], segment2[0])])
+
+        if np.linalg.det(m) == 0:
+            return -1, None, None, None
+
+        t1, t2 = np.dot(Vector(segment1[0], segment2[0]), np.linalg.inv(m))
+        q = segment1[0] + t1 * v
+
+        return int(0 <= t1 <= 1 and 0 <= t2 <= 1), q, t1, t2
+
     def plot(self, ax, **kwargs):
         """
         Add segment to the axes using kwargs.
