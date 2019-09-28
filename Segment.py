@@ -131,7 +131,7 @@ class Segment:
             return False
 
     @staticmethod
-    def _intersection(segment1, segment2):
+    def intersection(segment1, segment2):
         """
         Find the intersection of two segments.
 
@@ -160,6 +160,9 @@ class Segment:
         q = segment1[0] + t1 * v
 
         return int(0 <= t1 <= 1 and 0 <= t2 <= 1), q, t1, t2
+
+    def midpoint(self):
+        return Point((self._points[0].coord + self._points[1].coord) / 2)
 
     def plot(self, ax, **kwargs):
         """
