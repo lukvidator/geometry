@@ -3,6 +3,7 @@ from Point import Point
 from Segment import Segment
 from Vector import Vector
 from tools import rectangle_test
+from matplotlib.collections import PolyCollection
 from numpy import sign, array
 from numpy.linalg import det
 import numpy as np
@@ -82,6 +83,21 @@ class Polygon:
         return rectangle_test(self._points, point)
 
     def ray_test(self, point):
+        """
+        Find out if the point inside/outside the polygon.
+
+        1 -- the point lies outside the polygon.
+        0 -- the point lies on the edge of the polygon.
+        -1 -- the point lies inside the polygon.
+
+        Parameters
+        ----------
+        point : array_like
+
+        Returns
+        -------
+        out : int
+        """
         f, phi = [1, rnd.uniform(0, np.pi)]
         v = np.array([np.cos(phi), np.sin(phi)])
 
@@ -101,6 +117,21 @@ class Polygon:
                     return 0    # return case: point lies on the edge
 
         return f
+
+    def plot(self, ax, **kwargs):
+        """
+        Add polygon (PolyCollection) to the axes using kwargs.
+
+        Parameters
+        ----------
+        ax : current Axes object .
+        kwargs : key args are the same as in matplotlib.collections.PolyCollection.
+
+        Returns
+        -------
+        out : PolyCollection
+        """
+        return ax.add_collection(PolyCollection([self._points], **kwargs))
 
 # p = Polygon([
 #     Point([0, 0]),
