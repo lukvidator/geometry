@@ -118,10 +118,11 @@ def form_contours(self, segments):
             for i, segment in enumerate(segments):
                 # if the start of the segment is the current endpoint of the contour
                 if contours[k][-1][-1] == segment[0]:
-                    contours[k].append(segment.pop(i))
+                    contours[k].append(segments.pop(i))
                     break
 
             # if for-loop don't found the next segment to form contour
-            raise ValueError("Can't form contour: the is no any segment to continue forming contour")
+            if contours[k][-1] != segment:
+                raise ValueError("Can't form contour: the is no any segment to continue forming contour")
 
     return contours
