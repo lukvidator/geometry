@@ -93,14 +93,19 @@ def rectangle_test(points, point):
     return True if (point >= minmax[0]).all() and (point <= minmax[1]).all() else False
 
 
-def form_contours(self, segments):
+def form_contours(segments):
     """
     Return the contours formed from the list of segments.
 
-    [] -- if segments is empty
-    :param self:
-    :param segments:
-    :return:
+    Parameters
+    ----------
+    segments : list(Segments)
+
+    Returns
+    -------
+    out : list
+        [] -- if segments is empty
+        [[...], [...], ...] -- if segments can form the contours
     """
     contours = []
     if not segments:
