@@ -62,6 +62,9 @@ class Segment:
     def __reversed__(self):
         return self._points.__reversed__()
 
+    def reversed(self):
+        return Segment(list(self.__reversed__()))
+
     def __eq__(self, other):
         if self is other:
             return True
