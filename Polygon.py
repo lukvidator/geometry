@@ -2,7 +2,7 @@ from typing import List
 from Point import Point
 from Segment import Segment
 from Vector import Vector
-from tools import rectangle_test, _nf2, triangle_signed_square
+from tools import rectangle_test, _nf2, triangle_signed_square, form_contours
 from matplotlib.collections import PolyCollection
 import numpy as np
 import random as rnd
@@ -45,7 +45,7 @@ class Polygon:
         """
         :return: number of vertex
         """
-        return len(self.points)
+        return len(self._points)
 
     @property
     def edges(self):
@@ -61,14 +61,14 @@ class Polygon:
         0 - if it's not convex
         1 - if it's convex
         """
-        n = len(self.points) - 1
-        begin_orient = _nf2(self.points[n], self.points[0], self.points[1])
+        n = len(self._points) - 1
+        begin_orient = _nf2(self._points[n], self._points[0], self._points[1])
         for i in range(1, n):
-            current_orient = _nf2(self.points[i - 1], self.points[i], self.points[i + 1])
+            current_orient = _nf2(self._points[i - 1], self._points[i], self._points[i + 1])
             if np.sign(begin_orient) != np.sign(current_orient):
                 break
         else:
-            last_orient = _nf2(self.points[n - 1], self.points[n], self.points[0])
+            last_orient = _nf2(self._points[n - 1], self._points[n], self._points[0])
             if np.sign(begin_orient) == np.sign(last_orient):
                 return 1
         return 0
@@ -113,6 +113,20 @@ class Polygon:
         return f
 
     def segment_clipping(self, segment, case="out"):
+        """
+        Return the result of inner/outer segment clipping.
+
+        Parameters
+        ----------
+        segment : Segment
+        case : str
+            You should use case="out" for outer clipping and case="in" for inner.
+
+        Returns
+        -------
+        out : list
+            out contains the list of Segments.
+        """
         case = (-1, 0) if case == "out" else (1, )    # define the allowed values for ray_test
         parameters = {0, 1}  # set of the end points parameters of the segment
 
@@ -131,6 +145,9 @@ class Polygon:
             # if the midpoint of the segment lies inside/outside (according to the clipping case) the polygon
             if self.ray_test(segment.point_by_parameter((parameters[i] + parameters[i + 1]) / 2)) in case
         ]
+
+    def polygon_clipping(self, other):
+        pass    # page 432
 
     def plot(self, ax, **kwargs):
         """

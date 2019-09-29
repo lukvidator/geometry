@@ -59,6 +59,18 @@ class Segment:
 
     __repr__ = __str__
 
+    def reverse(self):
+        return Segment((self._points[1], self._points[0]))
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        else:
+            return self._points == other.points or list(self._points.__reversed__()) == other.points
+
+    def __ne__(self, other):
+        return not (self == other)
+
     def point_by_parameter(self, t):
         """
         Find a point according to the segment corresponding to parameter t.

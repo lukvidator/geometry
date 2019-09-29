@@ -6,6 +6,7 @@ class Point:
     def __init__(self, coord, dtype=np.float64):
         """
         Create a Point.
+
         Parameters
         ----------
         coord : array_like
@@ -34,15 +35,17 @@ class Point:
             raise WrongTypeException(f"Can't compare Point and {type(other)}")
         if len(self) != len(other):
             raise WrongDimensionException(f"Comparing points with different dimensions: {len(self)} != {len(other)}")
+        elif self is other:
+            return True
         else:
-            return (self._coord == other._coord).all()
+            return (self._coord == other.coord).all()
 
     def __ne__(self, other):
         return not (self == other)
 
     def __add__(self, other):
         try:
-            return Point(self._coord + other._coord)
+            return Point(self._coord + other.coord)
         except AttributeError:
             raise WrongTypeException(f"Can't add an object of type {type(other).__name__} to {type(self).__name__}")
         except ValueError:
@@ -72,10 +75,9 @@ class Point:
         return self._coord.__contains__(item)
 
     def __str__(self):
-        return str(type(self).__name__) + self._coord.__repr__()[5:]
+        return type(self).__name__ + self._coord.__repr__()[5:]
 
-    def __repr__(self):
-        return str(type(self).__name__) + self._coord.__repr__()[5:]
+    __repr__ = __str__
 
     def plot(self, ax, **kwargs):
         """

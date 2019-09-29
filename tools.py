@@ -94,6 +94,14 @@ def rectangle_test(points, point):
 
 
 def form_contours(self, segments):
+    """
+    Return the contours formed from the list of segments.
+
+    [] -- if segments is empty
+    :param self:
+    :param segments:
+    :return:
+    """
     contours = []
     if not segments:
         return contours
@@ -112,5 +120,8 @@ def form_contours(self, segments):
                 if contours[k][-1][-1] == segment[0]:
                     contours[k].append(segment.pop(i))
                     break
+
+            # if for-loop don't found the next segment to form contour
+            raise ValueError("Can't form contour: the is no any segment to continue forming contour")
 
     return contours

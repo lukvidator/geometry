@@ -3,7 +3,6 @@ from Exceptions import WrongTypeException, WrongDimensionException
 from Plane import Plane
 from Point import Point
 from Vector import Vector
-from Segment import Segment
 
 
 class Line:
