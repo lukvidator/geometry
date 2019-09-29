@@ -45,11 +45,12 @@ def extract_coefs(equation, variables):
     return np.array([float(x[0] + x[1]) for x in matches])
 
 
-def find_three_plane_points(coefs):
+def find_three_plane_points(coefficients):
     # TODO: extend function to n-dim
-    index = coefs.nonzero()[0][0]     # finding the axis with the first nonzero coefficient
-    others = np.concatenate([coefs[:index], coefs[index + 1:]])    # and drop it
-    others = -others / coefs[index]    # transferring other coefficients to another side and divide them by nonzero coef
+    index = coefficients.nonzero()[0][0]     # finding the axis with the first nonzero coefficient
+    others = np.concatenate([coefficients[:index], coefficients[index + 1:]])    # and drop it
+    # transferring other coefficients to another side and divide them by nonzero coefficient
+    others = -others / coefficients[index]
 
     instances = np.zeros([3, len(others) - 1])    # we'll substitute 3 different points
     instances[0, 0] = 1.
@@ -90,3 +91,26 @@ def triangle_signed_square(a, b, c):
 def rectangle_test(points, point):
     minmax = [np.amin(points), np.amax(points)]
     return True if (point >= minmax[0]).all() and (point <= minmax[1]).all() else False
+
+
+def form_contours(self, segments):
+    contours = []
+    if not segments:
+        return contours
+
+    k = -1
+    # duplicates?
+
+    while segments:  # while segments is not empty
+        k += 1  # move to the next contour
+        contours.append([])  # append the new list for the current contour
+        contours[k].append(segments.pop(0))  # and take the first segment from segments as the start segment
+
+        while contours[k][0][0] != contours[k][-1][-1]:  # while current contour is not closed
+            for i, segment in enumerate(segments):
+                # if the start of the segment is the current endpoint of the contour
+                if contours[k][-1][-1] == segment[0]:
+                    contours[k].append(segment.pop(i))
+                    break
+
+    return contours
