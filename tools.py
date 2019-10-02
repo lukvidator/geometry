@@ -1,4 +1,5 @@
 from functools import reduce
+from itertools import filterfalse
 import numpy as np
 import re
 
@@ -124,6 +125,7 @@ def form_contours(segments):
 
             for i, segment in enumerate(segments):
                 # if the start of the segment is the current endpoint of the contour
+                # TODO: add the reversing segment in case of contours[k][-1][-1] == segment[1]
                 if contours[k][-1][-1] == segment[0]:
                     contours[k].append(segments.pop(i))
                     is_appended = True
@@ -131,6 +133,36 @@ def form_contours(segments):
 
             # if for-loop don't found the next segment to form contour
             if not is_appended:
-                raise ValueError("Can't form contour: the is no any segment to continue forming contour")
-
+                raise ValueError("Can't form contour: there is no any segment to continue forming contour")
+    # TODO: improve function in case of the common point on the bound of the window (p. 430 at the bottom)
     return contours
+
+
+def unique_everseen(iterable, key=None):
+    """
+    List unique elements, preserving order. Remember all elements ever seen.
+    # unique_everseen('AAAABBBCCDAABBB') --> A B C D
+    # unique_everseen('ABBCcAD', str.lower) --> A B C D
+
+    Parameters
+    ----------
+    iterable : iterable
+    key : function, default: None
+
+    Returns
+    -------
+    out : iter
+    """
+    seen = list()
+    seen_add = seen.append
+
+    if key is None:
+        for element in filterfalse(seen.__contains__, iterable):
+            seen_add(element)
+            yield element
+    else:
+        for element in iterable:
+            k = key(element)
+            if k not in seen:
+                seen_add(k)
+                yield element
