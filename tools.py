@@ -125,9 +125,12 @@ def form_contours(segments):
 
             for i, segment in enumerate(segments):
                 # if the start of the segment is the current endpoint of the contour
-                # TODO: add the reversing segment in case of contours[k][-1][-1] == segment[1]
                 if contours[k][-1][-1] == segment[0]:
                     contours[k].append(segments.pop(i))
+                    is_appended = True
+                    break
+                elif contours[k][-1][-1] == segment[1]:
+                    contours[k].append(segments.pop(i).reversed())
                     is_appended = True
                     break
 
