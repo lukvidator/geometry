@@ -2,7 +2,7 @@ from typing import List
 from Point import Point
 from Segment import Segment
 from Vector import Vector
-from tools import rectangle_test, _nf2, triangle_signed_square, form_contours
+from tools import rectangle_test, _nf2, triangle_signed_square, form_contours, unique_everseen
 from matplotlib.collections import PolyCollection
 import numpy as np
 import random as rnd
@@ -146,8 +146,16 @@ class Polygon:
             if self.ray_test(segment.point_by_parameter((parameters[i] + parameters[i + 1]) / 2)) in case
         ]
 
-    def polygon_clipping(self, other):
-        pass    # page 432
+    def polygon_clipping(self, other, case="out"):
+        segments = []    # init an empty list for the clipped segments
+
+        for edge in self.edges:
+            segments.extend(other.segment_clipping(edge, case=case))    # collect self clipped edges
+
+        for edge in other.edges:
+            segments.extend(self.segment_clipping(edge, case="out"))    # collect other clipped edges
+
+        return form_contours(list(unique_everseen(segments)))    # form contours after deleting the duplicates
 
     def plot(self, ax, **kwargs):
         """
