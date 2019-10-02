@@ -38,7 +38,7 @@ class Point:
         elif self is other:
             return True
         else:
-            return (self._coord == other.coord).all()
+            return np.allclose(self._coord, other.coord)
 
     def __ne__(self, other):
         return not (self == other)
