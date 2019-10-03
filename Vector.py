@@ -135,8 +135,8 @@ class Vector(Point):
 
     @staticmethod
     def _angle2d_sign(self, other):
-        d = np.linalg.det(np.array(self, other))
-        return np.sign(d) if np.isclose(d, 0.) else 1
+        d = np.linalg.det(np.array([self, other]))
+        return np.sign(d) if not np.isclose(d, 0.) else 1
 
     @staticmethod
     def angle(self, other):
