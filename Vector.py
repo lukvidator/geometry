@@ -195,3 +195,25 @@ class Vector(Point):
         else:
             return 0
 
+    def octant(self):
+        if len(self) == 2:
+            if np.count_nonzero(self) == 0:
+                return 0
+
+            x, y = self._coord
+            if 0 <= y < x:
+                return 1
+            elif 0 < x <= y:
+                return 2
+            elif -y < x <= 0:
+                return 3
+            elif 0 < y <= -x:
+                return 4
+            elif x < y <= 0:
+                return 5
+            elif y <= x < 0:
+                return 6
+            elif 0 <= x < -y:
+                return 7
+            else:
+                return 8
