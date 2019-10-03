@@ -1,5 +1,5 @@
 from functools import reduce
-from itertools import filterfalse
+from itertools import filterfalse, chain
 import numpy as np
 import re
 
@@ -183,3 +183,7 @@ def unique_everseen(iterable, key=None):
             if k not in seen:
                 seen_add(k)
                 yield element
+
+
+def append(iterable, item):
+    return chain(iterable, [item])
