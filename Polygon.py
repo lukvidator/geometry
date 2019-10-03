@@ -105,6 +105,31 @@ class Polygon:
 
         return np.sign(np.pi - abs(s))
 
+    def octant_test(self, point):
+        s = delta = 0
+
+        for i, p in enumerate(append(self._points, self._points[0])):
+            v = Vector(point, p).octant()
+            if v == 0:
+                return 0
+
+            if i:
+                delta = v - w
+
+                if abs(delta) == 4:
+                    f = _nf2(self._points[i - 1], p, point)
+                    if f == 0:
+                        return 0
+                    else:
+                        delta = -4 * np.sign(f)
+                elif abs(delta) > 4:
+                    delta -= 8 * np.sign(delta)
+
+            w = v
+            s += delta
+
+        return 1 - 2 * np.sign(abs(s))
+
     def ray_test(self, point):
         """
         Find out if the point inside/outside the polygon.
