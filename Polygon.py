@@ -74,6 +74,17 @@ class Polygon:
         return 0
 
     def rectangle_test(self, point):
+        """
+        Find out if the point inside the rectangle, which is formed by min/max coords of the Polygon's points.
+
+        Parameters
+        ----------
+        point : array-like
+
+        Returns
+        -------
+        out : bool
+        """
         return rectangle_test(self._points, point)
 
     def ray_test(self, point):
@@ -147,6 +158,20 @@ class Polygon:
         ]
 
     def polygon_clipping(self, other, case="out"):
+        """
+        Find the polygon clipping.
+
+        Parameters
+        ----------
+        other : Polygon
+        case : str
+            You should use case="out" for outer clipping and case="in" for inner.
+
+        Returns
+        -------
+        out : list
+            The out consists of lists of Segments which are formed contours.
+        """
         segments = []    # init an empty list for the clipped segments
 
         for edge in self.edges:
@@ -171,27 +196,3 @@ class Polygon:
         out : PolyCollection
         """
         return ax.add_collection(PolyCollection([self._points], **kwargs))
-
-# p = Polygon([
-#     Point([0, 0]),
-#     Point([2, 0]),
-#     Point([2, 2]),
-#     Point([0, 2]),
-# ])
-#
-# print(p.square)
-# print(p.orientation)
-# print(p.vertex_number)
-# print(p.edges)
-# print(p.is_convex)
-#
-# p2 = Polygon([
-#     Point([0, 0]),
-#     Point([2, 1]),
-#     Point([0, 2]),
-#     Point([1, 1])
-# ])
-#
-# print(p2.square)
-# print(p2.orientation)
-# print(p2.is_convex)

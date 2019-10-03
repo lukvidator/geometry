@@ -90,6 +90,20 @@ def triangle_signed_square(a, b, c):
 
 
 def rectangle_test(points, point):
+    """
+    Find out if the point inside the rectangle, which is formed by min/max coords of the Polygon's points.
+
+    Parameters
+    ----------
+    points: array-like
+        Points should be the matrix with shape (Np, dim).
+    point : array-like
+        Point should be an array-like object with length == dim.
+
+    Returns
+    -------
+    out : bool
+    """
     minmax = [np.amin(points), np.amax(points)]
     return True if (point >= minmax[0]).all() and (point <= minmax[1]).all() else False
 
