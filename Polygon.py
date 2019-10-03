@@ -2,7 +2,7 @@ from typing import List
 from Point import Point
 from Segment import Segment
 from Vector import Vector
-from tools import rectangle_test, _nf2, triangle_signed_square, form_contours, unique_everseen
+from tools import rectangle_test, _nf2, triangle_signed_square, form_contours, unique_everseen, append
 from matplotlib.collections import PolyCollection
 import numpy as np
 import random as rnd
@@ -86,6 +86,24 @@ class Polygon:
         out : bool
         """
         return rectangle_test(self._points, point)
+
+    def rad_test(self, point):
+        s = delta = 0.
+
+        for i, p in enumerate(append(self._points, self._points[0])):
+            v = Vector(point, p)
+            if v.norm() == 0.:
+                return 0
+
+            if i:
+                delta = Vector.angle(w, v)
+                if np.isclose(np.pi, abs(delta)):
+                    return 0
+
+            w = v
+            s += delta
+
+        return np.sign(np.pi - abs(s))
 
     def ray_test(self, point):
         """
