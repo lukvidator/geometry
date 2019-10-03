@@ -134,6 +134,11 @@ class Vector(Point):
         return self / self.norm()
 
     @staticmethod
+    def _angle2d_sign(self, other):
+        d = np.linalg.det(np.array(self, other))
+        return np.sign(d) if np.isclose(d, 0.) else 1
+
+    @staticmethod
     def angle(self, other):
         """
         Find the angle between two vectors.
@@ -147,7 +152,8 @@ class Vector(Point):
         -------
         out : float
         """
-        return np.arccos(self.dot(other) / (self.norm() * other.norm()))
+        sign = Vector._angle2d_sign(self, other) if len(self) == 2 else 1
+        return sign * np.arccos(self.dot(other) / (self.norm() * other.norm()))
 
     @staticmethod
     def projection(v, w):
