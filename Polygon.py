@@ -166,6 +166,36 @@ class Polygon:
 
         return f
 
+    def is_in_polygon(self, point, test="ray"):
+        """
+        Find out if the point inside/outside the polygon.
+
+        1 -- the point lies outside the polygon.
+        0 -- the point lies on the edge of the polygon.
+        -1 -- the point lies inside the polygon.
+
+        Parameters
+        ----------
+        point : array_like
+        test : str, default = "ray"
+            You Should use 'ray', 'rad', 'octant' to specify what test (ray_test, rad_test or octant_test) to use.
+
+        Returns
+        -------
+        out : int
+        """
+        if test == "ray":
+            func = self.ray_test
+        elif test == "octant":
+            func = self.octant_test
+        elif test == "rad":
+            func = self.rad_test
+
+        if self.rectangle_test(point):
+            return func(point)
+        else:
+            return 1
+
     def segment_clipping(self, segment, case="out"):
         """
         Return the result of inner/outer segment clipping.
