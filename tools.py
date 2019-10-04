@@ -105,7 +105,7 @@ def rectangle_test(points, point):
     out : bool
     """
     minmax = [np.amin(points), np.amax(points)]
-    return True if (point >= minmax[0]).all() and (point <= minmax[1]).all() else False
+    return True if (np.array(point) >= minmax[0]).all() and (np.array(point) <= minmax[1]).all() else False
 
 
 def form_contours(segments):
