@@ -227,7 +227,7 @@ class Polygon:
             Segment((segment.point_by_parameter(parameters[i]), segment.point_by_parameter(parameters[i + 1])))
             for i in range(0, len(parameters) - 1)
             # if the midpoint of the segment lies inside/outside (according to the clipping case) the polygon
-            if self.ray_test(segment.point_by_parameter((parameters[i] + parameters[i + 1]) / 2)) in case
+            if self.is_in_polygon(segment.point_by_parameter((parameters[i] + parameters[i + 1]) / 2)) in case
         ]
 
     def polygon_clipping(self, other, case="out"):
