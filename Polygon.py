@@ -247,11 +247,11 @@ class Polygon:
         """
         segments = []    # init an empty list for the clipped segments
 
-        for edge in self.edges:
-            segments.extend(other.segment_clipping(edge, case=case))    # collect self clipped edges
-
         for edge in other.edges:
-            segments.extend(self.segment_clipping(edge, case="out"))    # collect other clipped edges
+            segments.extend(self.segment_clipping(edge, case=case))    # collect self clipped edges
+
+        for edge in self.edges:
+            segments.extend(other.segment_clipping(edge, case="out"))    # collect other clipped edges
 
         return form_contours(list(unique_everseen(segments)))    # form contours after deleting the duplicates
 
