@@ -4,6 +4,7 @@ from Line import Line
 from Point import Point
 from tools import rectangle_test
 from Vector import Vector
+from matplotlib import pyplot as plt
 
 
 class Segment:
@@ -179,7 +180,7 @@ class Segment:
     def midpoint(self):
         return Point((self._points[0].coord + self._points[1].coord) / 2)
 
-    def plot(self, ax, **kwargs):
+    def plot(self, ax=None, **kwargs):
         """
         Add segment to the axes using kwargs.
 
@@ -192,4 +193,6 @@ class Segment:
         -------
         out : Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
         """
+        if ax is None:
+            ax = plt
         return ax.plot([self._points[0][0], self._points[1][0]], [self._points[0][1], self._points[1][1]], **kwargs)

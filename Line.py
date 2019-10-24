@@ -3,6 +3,7 @@ from Exceptions import WrongTypeException, WrongDimensionException
 from Plane import Plane
 from Point import Point
 from Vector import Vector
+from matplotlib import pyplot as plt
 
 
 class Line:
@@ -144,7 +145,7 @@ class Line:
 
     __repr__ = __str__
 
-    def plot(self, ax, **kwargs):
+    def plot(self, ax=None, **kwargs):
         """
         Add line to the axes using kwargs.
 
@@ -157,6 +158,9 @@ class Line:
         -------
         out : Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
         """
+        if ax is None:
+            ax = plt
+
         index = self._vector.nonzero()[0][0]    # finding index of nonzero self.vector coordinate
         lim = np.array([ax.get_xlim, ax.get_ylim, ax.get_zlim][index]())    # choosing the corresponding lim
         t = (lim - self._point[index]) / self._vector[index]    # evaluating the parameter t for the param line equation

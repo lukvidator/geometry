@@ -1,5 +1,6 @@
 import numpy as np
 from Exceptions import WrongDimensionException, WrongTypeException
+from matplotlib import pyplot as plt
 
 
 class Point:
@@ -79,7 +80,7 @@ class Point:
 
     __repr__ = __str__
 
-    def plot(self, ax, **kwargs):
+    def plot(self, ax=None, **kwargs):
         """
         Add point to the axes using kwargs.
 
@@ -92,4 +93,6 @@ class Point:
         -------
         out : Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
         """
+        if ax is None:
+            ax = plt
         return ax.scatter(*self._coord, **kwargs)

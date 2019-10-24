@@ -8,6 +8,7 @@ from itertools import chain
 from more_itertools import pairwise, windowed
 import numpy as np
 import random as rnd
+from matplotlib import pyplot as plt
 
 
 class Polygon:
@@ -246,7 +247,7 @@ class Polygon:
 
         return form_contours(list(unique_everseen(segments)))    # form contours after deleting the duplicates
 
-    def plot(self, ax, **kwargs):
+    def plot(self, ax=None, **kwargs):
         """
         Add polygon (PolyCollection) to the axes using kwargs.
 
@@ -259,4 +260,7 @@ class Polygon:
         -------
         out : PolyCollection
         """
+        if ax is None:
+            ax = plt
+
         return ax.add_collection(PolyCollection([self._points], **kwargs))
