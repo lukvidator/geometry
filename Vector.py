@@ -191,7 +191,7 @@ class Vector(Point):
         out : int
         """
         if Vector.are_collinear(vector1, vector2):
-            return 1 if vector1.normalize() == vector1.normalize() else -1
+            return 1 if vector1.normalize() == vector2.normalize() else -1
         else:
             return 0
 
