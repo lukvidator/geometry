@@ -100,7 +100,7 @@ class Segment:
         -------
         out : float
         """
-        vectors = [Vector(point, self._points[0]), Vector(*self._points)]
+        vectors = [Vector(self._points[0], point), Vector(*self._points)]
         if Vector.are_collinear(*vectors):
             return Vector.direction_case(*vectors) * vectors[0].norm() / vectors[1].norm()
         else:
