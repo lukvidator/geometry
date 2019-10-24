@@ -1,7 +1,9 @@
 from functools import reduce
+from operator import itemgetter
 from itertools import filterfalse, chain
 import numpy as np
 import re
+from Vector import Vector
 
 
 def extract_coefs(equation, variables):
@@ -187,3 +189,65 @@ def unique_everseen(iterable, key=None):
 
 def append(iterable, item):
     return chain(iterable, [item])
+
+
+def find_min_point(points):
+    return np.min(points[points[:, 1] == np.min(points[:, 1])], axis=0)
+
+
+def convex_hull(points):
+    ch = [find_min_point(points)]
+
+    while True:
+        ch.append(ch[-1])
+
+        for point in points:
+            square = triangle_signed_square(ch[-2], point, ch[-1])
+            if square > 0. or (square == 0. and Vector(ch[-2], ch[-1]).norm() < Vector(ch[-2], point).norm()):
+                ch[-1] = point
+
+        if np.allclose(ch[0], ch[-1]):
+            break
+
+    return ch
+
+
+def angle(point):
+    x, y = point[0], point[1]
+    if x > 0:
+        if y >= 0:
+            return np.arctan(y / x)
+        else:
+            return np.arctan(y / x) + 2 * np.pi
+    elif x < 0:
+        return np.arctan(y / x) + np.pi
+    elif x == 0.:
+        if y > 0:
+            return np.pi / 2
+        elif y < 0:
+            return 3 * np.pi / 2
+        else:
+            return np.nan
+
+
+def polar(point):
+    return np.array([angle(point), np.dot(point, point)])
+
+
+def polar_sort_points(points, min_point):
+    points = np.hstack([points, np.array([polar(point) for point in points - min_point])])
+    return np.array(sorted(points, key=itemgetter(2, 3)))[:, :2]
+
+
+def graham_convex_hull(points):
+    ch = [find_min_point(points)]
+    points = points[[row.any() for row in ~(points == ch[0])]]
+    points = polar_sort_points(points, ch[0])
+
+    for point in points:
+        while len(ch) > 1 and triangle_signed_square(ch[-2], ch[-1], point) <= 0:
+            ch.pop()
+
+        ch.append(point)
+
+    return np.array(ch)
