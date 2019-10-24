@@ -4,6 +4,7 @@ from Segment import Segment
 from Vector import Vector
 from tools import rectangle_test, _nf2, triangle_signed_square, form_contours, unique_everseen, append
 from matplotlib.collections import PolyCollection
+from more_itertools import pairwise
 import numpy as np
 import random as rnd
 
@@ -25,9 +26,9 @@ class Polygon:
         """
         :return: signed square of convex Polygon
         """
-        result = 0
-        for i in range(1, len(self._points) - 1):
-            result += triangle_signed_square(self._points[0], self._points[i], self._points[i + 1])
+        result = 0.
+        for pair in pairwise(self._points[1:]):
+            result += triangle_signed_square(self._points[0], *pair)
 
         return result
 
@@ -48,11 +49,12 @@ class Polygon:
         return len(self._points)
 
     @property
+    def edges_iterator(self):
+        return (Segment(pair) for pair in pairwise(append(self._points, self._points[0])))
+
+    @property
     def edges(self):
-        n = len(self._points)
-        result = [Segment([self._points[i], self._points[i + 1]]) for i in range(n - 1)]
-        result.append(Segment([self._points[n - 1], self._points[0]]))
-        return result
+        return list(self.edges_iterator)
 
     @property
     def is_convex(self):
