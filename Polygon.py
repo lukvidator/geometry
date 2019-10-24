@@ -61,7 +61,7 @@ class Polygon:
         1 - if it's convex
         """
 
-        signs = (np.sign(_nf2(*triple)) for triple in windowed(chain(self._points, self._points[-2:]), n=3, step=1))
+        signs = (np.sign(_nf2(*triple)) for triple in windowed(chain(self._points, self._points[:2]), n=3, step=1))
         return 1 if len(set(signs)) == 1 else 0
 
     def rectangle_test(self, point):
