@@ -4,7 +4,8 @@ from Segment import Segment
 from Vector import Vector
 from tools import rectangle_test, _nf2, triangle_signed_square, form_contours, unique_everseen, append
 from matplotlib.collections import PolyCollection
-from more_itertools import pairwise
+from itertools import chain
+from more_itertools import pairwise, windowed
 import numpy as np
 import random as rnd
 
@@ -26,11 +27,7 @@ class Polygon:
         """
         :return: signed square of convex Polygon
         """
-        result = 0.
-        for pair in pairwise(self._points[1:]):
-            result += triangle_signed_square(self._points[0], *pair)
-
-        return result
+        return sum((triangle_signed_square(self._points[0], *pair) for pair in pairwise(self._points[1:])))
 
     @property
     def orientation(self):
@@ -63,17 +60,9 @@ class Polygon:
         0 - if it's not convex
         1 - if it's convex
         """
-        n = len(self._points) - 1
-        begin_orient = _nf2(self._points[n], self._points[0], self._points[1])
-        for i in range(1, n):
-            current_orient = _nf2(self._points[i - 1], self._points[i], self._points[i + 1])
-            if np.sign(begin_orient) != np.sign(current_orient):
-                break
-        else:
-            last_orient = _nf2(self._points[n - 1], self._points[n], self._points[0])
-            if np.sign(begin_orient) == np.sign(last_orient):
-                return 1
-        return 0
+
+        signs = (np.sign(_nf2(*triple)) for triple in windowed(chain(self._points, self._points[-2:]), n=3, step=1))
+        return 1 if len(set(signs)) == 1 else 0
 
     def rectangle_test(self, point):
         """
