@@ -173,7 +173,7 @@ class Segment:
             return -1, None, None, None
 
         t1, t2 = np.dot(Vector(segment1[0], segment2[0]), np.linalg.inv(m))
-        q = segment1[0] + t1 * v
+        q = Point(segment1[0] + t1 * v)
 
         return int(0 <= t1 <= 1 and 0 <= t2 <= 1), q, t1, t2
 

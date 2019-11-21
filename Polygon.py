@@ -2,7 +2,7 @@ from typing import List
 from Point import Point
 from Segment import Segment
 from Vector import Vector
-from tools import rectangle_test, _nf2, triangle_signed_square, form_contours, unique_everseen, append
+from tools import rectangle_test, nf2, triangle_signed_square, form_contours, unique_everseen, append
 from matplotlib.collections import PolyCollection
 from itertools import chain
 from more_itertools import pairwise, windowed
@@ -30,7 +30,6 @@ class Polygon:
         """
         return sum((triangle_signed_square(self._points[0], *pair) for pair in pairwise(self._points[1:])))
 
-    @property
     def orientation(self):
         """
         :return:
@@ -39,12 +38,14 @@ class Polygon:
         """
         return np.sign(self.square)
 
-    @property
-    def vertex_number(self):
-        """
-        :return: number of vertex
-        """
+    def __len__(self):
         return len(self._points)
+
+    def __getitem__(self, item):
+        return self._points[item]
+
+    def __setitem__(self, key, value):
+        self._points[key] = Point(value)
 
     @property
     def edges_iterator(self):
@@ -54,7 +55,6 @@ class Polygon:
     def edges(self):
         return list(self.edges_iterator)
 
-    @property
     def is_convex(self):
         """
         :return:
@@ -62,7 +62,7 @@ class Polygon:
         1 - if it's convex
         """
 
-        signs = (np.sign(_nf2(*triple)) for triple in windowed(chain(self._points, self._points[:2]), n=3, step=1))
+        signs = (np.sign(nf2(*triple)) for triple in windowed(chain(self._points, self._points[:2]), n=3, step=1))
         return 1 if len(set(signs)) == 1 else 0
 
     def rectangle_test(self, point):
@@ -109,7 +109,7 @@ class Polygon:
                 delta = v - w
 
                 if abs(delta) == 4:
-                    f = _nf2(self._points[i - 1], p, point)
+                    f = nf2(self._points[i - 1], p, point)
                     if f == 0:
                         return 0
                     else:

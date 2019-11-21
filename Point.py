@@ -18,6 +18,7 @@ class Point(Vector):
             be float.
         copy : bool, optional
             Used to specify if the point should be copied or not.
+            Default is True.
 
         Returns
         -------

@@ -3,6 +3,7 @@ from Exceptions import WrongDimensionException, WrongTypeException
 from Point import Point
 from tools import extract_coefs, find_three_plane_points
 from Vector import Vector
+from matplotlib import pyplot as plt
 
 
 class Plane:
@@ -247,7 +248,7 @@ class Plane:
         ranks = [np.linalg.matrix_rank(plane.vectors) for plane in (plane1, plane2)]
         ranks.sort(key=len)
         ranks.extend([np.linalg.matrix_rank(system) for system in (vectors, np.append(vectors, bridge))])
-
+        # TODO: replace np.append with append from tools
         return Plane._relation_cases(ranks)
 
     def plot(self, ax, **kwargs):
