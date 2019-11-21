@@ -83,12 +83,29 @@ def rotation_matrix(phi, w=None):
         pass    # TODO: implement rotation_matrix for 3D
 
 
-def _nf2(a, b, p):
+def nf2(a, b, p):
+    """
+    Returns the result of f(p), where
+    f is the equation of the line based on
+    the vector (b - a) with the start point as a.
+
+    Parameters
+    ----------
+    a, b, p : ndarray or Point
+
+    Returns
+    -------
+    out : float
+        out is f(p) and represents:
+        0 - if p is on the line,
+        > 0 - if p is on the right side,
+        < 0 - if p is on the left side.
+    """
     return np.linalg.det([np.array(p) - np.array(a), np.array(b) - np.array(a)])
 
 
 def triangle_signed_square(a, b, c):
-    return .5 * _nf2(a, c, b)
+    return .5 * nf2(a, c, b)
 
 
 def rectangle_test(points, point):
