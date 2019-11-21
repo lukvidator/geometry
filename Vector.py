@@ -1,72 +1,21 @@
-from Point import Point
 import numpy as np
-from Exceptions import WrongTypeException, WrongDimensionException
 
 
-class Vector(Point):
-    def __init__(self, point1, point2=None, dtype=np.float64):
-        """
-        Create a vector.
-
-        Parameters
-        ----------
-        point1: array_like
-        point2: array_like
-        dtype: data-type, optional
-
-        Returns
-        -------
-        out : Vector
-        """
-        if point2 is None:
-            self._coord = np.array(point1, dtype=dtype)
+class Vector(np.ndarray):
+    def __new__(cls, start_point, end_point=None, dtype=np.float, copy=True):
+        if end_point is None:
+            return np.array(start_point, dtype=dtype, copy=copy).view(cls)
         else:
-            self._coord = np.array(point2, dtype=dtype) - np.array(point1, dtype=dtype)
+            return (np.array(end_point, dtype=dtype, copy=copy) -
+                    np.array(start_point, dtype=dtype, copy=copy)).view(cls)
 
-    def __neg__(self):
-        return Vector(-self._coord)
+    @classmethod
+    def from_iter(cls, iterable, dtype=np.float, count=-1):
+        return np.fromiter(iterable, dtype, count=count).view(cls)
 
-    def __add__(self, other):
-        return Vector(super(Vector, self).__add__(other))
-
-    def __sub__(self, other):
-        try:
-            return self.__add__(-other)
-        except (WrongTypeException, AttributeError):
-            raise WrongTypeException(
-                f"Can't subtract an object of type {type(other).__name__} from {type(self).__name__}"
-            )
-        except WrongDimensionException:
-            raise WrongDimensionException(
-                f"subtract {type(other).__name__} of len {len(other)} from {type(self).__name__} of len {len(self)}"
-            )
-
-    def __mul__(self, other):
-        return Vector(self._coord * other)
-
-    def __truediv__(self, other):
-        return Vector(self._coord / other)
-
-    __rmul__ = __mul__
-    __iadd__ = __add__
-    __radd__ = __add__
-    __isub__ = __sub__
-    __imul__ = __mul__
-    __itruediv__ = __truediv__
-
-    def dot(self, other):
-        """
-        Find the dot product of two vectors.
-
-        Parameters
-        ----------
-        other : Vector
-
-        Returns
-        -------
-        out : int
-        """
-        return np.dot(self, other)
+    @classmethod
+    def from_function(cls, func, length, dtype=float):
+        return np.fromfunction(func, shape=(length,), dtype=dtype).view(cls)
 
     def is_orthog(self, other):
         """
@@ -95,7 +44,7 @@ class Vector(Point):
         -------
         out : bool
         """
-        return np.linalg.matrix_rank(np.array([*vectors])) == 1
+        return np.linalg.matrix_rank(vectors) == 1
 
     @staticmethod
     def cross(self, other):
@@ -113,7 +62,7 @@ class Vector(Point):
         """
         return Vector(np.cross(self, other))
 
-    def norm(self):
+    def norm(self, norm="euclidean"):
         """
         Find the norm of vector.
 
@@ -121,7 +70,7 @@ class Vector(Point):
         -------
         out : float
         """
-        return np.sqrt(np.sum(self._coord ** 2))
+        return np.sqrt(self.dot(self))
 
     def normalize(self):
         """
@@ -217,3 +166,6 @@ class Vector(Point):
                 return 7
             else:
                 return 8
+
+    def __str__(self):
+        return super(self.__class__, self).__repr__()
