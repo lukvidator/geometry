@@ -194,5 +194,5 @@ class Segment:
         out : Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
         """
         if ax is None:
-            ax = plt
+            ax = plt.gca()
         return ax.plot([self._points[0][0], self._points[1][0]], [self._points[0][1], self._points[1][1]], **kwargs)

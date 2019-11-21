@@ -261,6 +261,6 @@ class Polygon:
         out : PolyCollection
         """
         if ax is None:
-            ax = plt
+            ax = plt.gca()
 
         return ax.add_collection(PolyCollection([self._points], **kwargs))

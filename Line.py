@@ -159,7 +159,7 @@ class Line:
         out : Line2DCollection in case of Axes or Line3DCollection in case of Axes3D
         """
         if ax is None:
-            ax = plt
+            ax = plt.gca()
 
         index = self._vector.nonzero()[0][0]    # finding index of nonzero self.vector coordinate
         lim = np.array([ax.get_xlim, ax.get_ylim, ax.get_zlim][index]())    # choosing the corresponding lim
