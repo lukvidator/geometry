@@ -17,6 +17,15 @@ class Vector(np.ndarray):
     def from_function(cls, func, length, dtype=float):
         return np.fromfunction(func, shape=(length,), dtype=dtype).view(cls)
 
+    def __eq__(self, other):
+        if self is other:
+            return True
+        else:
+            return bool(np.all(np.ndarray.__eq__(self, other)))
+
+    def __ne__(self, other):
+        return not self == other
+
     def is_orthog(self, other):
         """
         Find out if two vectors are orthogonal to each other.
