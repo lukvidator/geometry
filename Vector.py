@@ -158,7 +158,7 @@ class Vector(np.ndarray):
             if np.count_nonzero(self) == 0:
                 return 0
 
-            x, y = self._coord
+            x, y = self
             if 0 <= y < x:
                 return 1
             elif 0 < x <= y:

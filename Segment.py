@@ -178,7 +178,7 @@ class Segment:
         return int(0 <= t1 <= 1 and 0 <= t2 <= 1), q, t1, t2
 
     def midpoint(self):
-        return Point((self._points[0].coord + self._points[1].coord) / 2)
+        return (self._points[0] + self._points[1]) / 2
 
     def plot(self, ax=None, **kwargs):
         """
