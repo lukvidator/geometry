@@ -5,10 +5,12 @@ from Point import Point
 from tools import rectangle_test
 from Vector import Vector
 from matplotlib import pyplot as plt
+# import itertools as it
+import more_itertools as mit
 
 
-class Segment:
-    def __init__(self, points):
+class Segment(np.ndarray):
+    def __new__(cls, points, dtype=np.float, copy=True):
         """
         Create a segment.
 
@@ -20,10 +22,10 @@ class Segment:
         -------
         out : Segment
         """
-        self.points = points
+        return np.array(points, dtype=dtype, copy=copy).view(cls)
 
     @classmethod
-    def from_point_and_vector(cls, point, vector):
+    def from_point_and_vector(cls, point, vector, dtype=np.float, copy=True):
         """
         Create a segment.
 
@@ -31,49 +33,48 @@ class Segment:
         ----------
         point : Point
         vector : Vector
+        dtype : data-type, optional
+            Any object that can be interpreted as a numpy data type.
+        copy : bool, optional
+            If true (default), then the object is copied.  Otherwise, a copy will
+            only be made if __array__ returns a copy, if obj is a nested sequence,
+            or if a copy is needed to satisfy any of the other requirements
+            (`dtype`, `order`, etc.).
 
         Returns
         -------
         out : Segment
         """
-        return cls((lambda p, v: [p, p + v])(Point(point), Vector(vector)))
+        return cls((lambda p, v: [p, p + v])(Point(point), Vector(vector)), dtype=dtype, copy=copy)
+
+    @classmethod
+    def from_iter(cls, iterable, dtype=np.float, copy=True):
+        points = mit.take(2, iterable)
+        return cls(points, dtype=dtype, copy=copy)
 
     @property
     def points(self):
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        if len(points) == 2:
-            self._points = [Point(point) for point in points]
-        else:
-            raise WrongTypeException(f"Can't set {type(self)} points with {points}")
+        return self
 
     def __getitem__(self, item):
-        return self._points[item]
-
-    def __setitem__(self, key, value):
-        self._points[key] = Point(value)
+        return np.ndarray.__getitem__(self, item).view(Point)
 
     def __str__(self):
-        return self.__class__.__name__ + "(" + str(self._points) + ")"
-
-    __repr__ = __str__
-
-    def __reversed__(self):
-        return self._points.__reversed__()
+        return super(self.__class__, self).__repr__()
 
     def reversed(self):
-        return Segment(list(self.__reversed__()))
+        return self.__class__.from_iter(reversed(self))
 
     def __eq__(self, other):
         if self is other:
             return True
         else:
-            return self._points == other.points or list(self._points.__reversed__()) == other.points
+            eq = np.ndarray.__eq__
+            result = np.all(eq(self, other)) or np.all(eq(self.reversed(), other))
+            return bool(result)
 
     def __ne__(self, other):
-        return not (self == other)
+        return not self == other
 
     def point_by_parameter(self, t):
         """
@@ -87,7 +88,7 @@ class Segment:
         -------
         out : Point
         """
-        return self._points[0] + t * Vector(*self._points)
+        return (self[0] + t * self[1]).view(Point)
 
     def parameter_by_point(self, point):
         """
@@ -101,7 +102,7 @@ class Segment:
         -------
         out : float
         """
-        vectors = [Vector(self._points[0], point), Vector(*self._points)]
+        vectors = [Vector(self[0], point), Vector(*self)]
         if Vector.are_collinear(*vectors):
             return Vector.direction_case(*vectors) * vectors[0].norm() / vectors[1].norm()
         else:
@@ -125,6 +126,8 @@ class Segment:
         -------
         out : int
         """
+        # incorrect
+        # TODO: tests
         line1 = Line.from_segment(segment1)
         case = Line.relation(line1, Line.from_segment(segment2))
         if case == 0:
@@ -142,7 +145,7 @@ class Segment:
 
     def _is_point_on_segment(self, point: Point) -> bool:
         if Vector.are_collinear(Vector(self[0], point), Vector(self[0], self[1])):
-            return rectangle_test(self._points, point)
+            return rectangle_test(self, point)
         else:
             return False
 
@@ -173,12 +176,12 @@ class Segment:
             return -1, None, None, None
 
         t1, t2 = np.dot(Vector(segment1[0], segment2[0]), np.linalg.inv(m))
-        q = Point(segment1[0] + t1 * v)
+        q = segment1[0] + t1 * v
 
         return int(0 <= t1 <= 1 and 0 <= t2 <= 1), q, t1, t2
 
     def midpoint(self):
-        return (self._points[0] + self._points[1]) / 2
+        return sum(self) / 2
 
     def plot(self, ax=None, **kwargs):
         """
@@ -195,4 +198,4 @@ class Segment:
         """
         if ax is None:
             ax = plt.gca()
-        return ax.plot([self._points[0][0], self._points[1][0]], [self._points[0][1], self._points[1][1]], **kwargs)
+        return ax.plot(self[:, 0], self[:, 1], **kwargs)
