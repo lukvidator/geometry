@@ -246,7 +246,7 @@ class Plane:
         vectors = np.vstack([plane1.vectors, plane2.vectors])
 
         ranks = [np.linalg.matrix_rank(plane.vectors) for plane in (plane1, plane2)]
-        ranks.sort(key=len)
+        ranks.sort()
         ranks.extend([np.linalg.matrix_rank(system) for system in (vectors, np.append(vectors, bridge))])
         # TODO: replace np.append with append from tools
         return Plane._relation_cases(ranks)
