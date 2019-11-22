@@ -14,7 +14,7 @@ class Vector(np.ndarray):
         return np.fromiter(iterable, dtype, count=count).view(cls)
 
     @classmethod
-    def from_function(cls, func, length, dtype=float):
+    def from_function(cls, func, length, dtype=np.float):
         return np.fromfunction(func, shape=(length,), dtype=dtype).view(cls)
 
     def __eq__(self, other):
