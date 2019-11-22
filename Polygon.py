@@ -23,7 +23,6 @@ class Polygon:
     def points(self, points):
         self._points = [Point(point) for point in points]
 
-    @property
     def square(self):
         """
         :return: signed square of convex Polygon
