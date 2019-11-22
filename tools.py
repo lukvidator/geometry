@@ -76,7 +76,7 @@ def find_three_plane_points(coefficients):
 
 
 def rotation_matrix(phi, w=None):
-    if not w:
+    if w is None:
         return np.array([[np.cos(phi), -np.sin(phi)],
                          [np.sin(phi), np.cos(phi)]])
     else:
